@@ -1,4 +1,4 @@
-package com.example.SilverCare_Backend;
+package com.SilverCare.SilverCare_Backend;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
