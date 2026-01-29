@@ -1,4 +1,4 @@
-package com.example.SilverCare_Backend;
+package com.SilverCare.SilverCare_Backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

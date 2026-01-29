@@ -1,4 +1,4 @@
-package com.example.SilverCare_Backend;
+package com.SilverCare.SilverCare_Backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
