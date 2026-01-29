@@ -1,0 +1,38 @@
+<!-- footer.html -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-bottom">
+            <p>&copy; 2025 SilverCare. All rights reserved.</p>
+            <p class="footer-tagline">Dedicated to delivering comfort, safety, and independence at home.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="back-to-top" aria-label="Back to top">
+    <span aria-hidden="true">&#8593;</span>
+</button>
+
+<script>
+(function() {
+    const backToTopButton = document.getElementById('backToTop');
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+    
+    // Smooth scroll to top when clicked
+    backToTopButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+})();
+</script>

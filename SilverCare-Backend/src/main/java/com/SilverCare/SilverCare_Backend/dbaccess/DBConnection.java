@@ -1,4 +1,4 @@
-package dbaccess;
+package com.SilverCare.SilverCare_Backend.dbaccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
