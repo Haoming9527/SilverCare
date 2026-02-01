@@ -16,7 +16,7 @@
                 %>
                 <li><a href="home.jsp">Home</a></li>
                 <li><a href="about.jsp">About Us</a></li>
-                <li><a href="serviceCategory.jsp">Services</a></li>
+                <li><a href="serviceCategories">Services</a></li>
                 <li><a href="contact.jsp">Contact Us</a></li>
                 <%
                     }
