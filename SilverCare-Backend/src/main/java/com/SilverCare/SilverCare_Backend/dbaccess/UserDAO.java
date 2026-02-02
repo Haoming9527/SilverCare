@@ -77,7 +77,7 @@ public class UserDAO {
                 uBean.setEmail(rs.getString("email"));
                 uBean.setPassword(rs.getString("password"));
                 uBean.setRole(rs.getInt("role"));
-                System.out.print(".....done writing to bean!......");
+
             }
         } catch (SQLException e) {
             e.printStackTrace();

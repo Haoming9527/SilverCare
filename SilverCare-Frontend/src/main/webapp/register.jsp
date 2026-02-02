@@ -63,7 +63,7 @@
                 </form>
 
                 <p class="auth-footer-text">
-                    Already have an account? <a href="login.jsp">Login here</a>
+                    Already have an account? <a href="login">Login here</a>
                 </p>
             </div>
         </div>

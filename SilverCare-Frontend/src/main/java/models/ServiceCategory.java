@@ -1,6 +1,6 @@
 package models;
 
-public class ServiceCategory {
+public class ServiceCategory implements java.io.Serializable {
     private int id;
     private String categoryName;
 

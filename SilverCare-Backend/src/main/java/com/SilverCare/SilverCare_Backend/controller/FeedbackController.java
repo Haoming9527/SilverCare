@@ -1,0 +1,38 @@
+package com.SilverCare.SilverCare_Backend.controller;
+
+import com.SilverCare.SilverCare_Backend.dbaccess.Feedback;
+import com.SilverCare.SilverCare_Backend.dbaccess.FeedbackDAO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/feedback")
+public class FeedbackController {
+
+    private final FeedbackDAO feedbackDAO = new FeedbackDAO();
+
+    @PostMapping("/save")
+    public ResponseEntity<String> saveFeedback(@RequestBody Feedback feedback) {
+        try {
+            boolean success = feedbackDAO.saveFeedback(feedback);
+            if (success) {
+                return ResponseEntity.ok("Feedback saved successfully");
+            } else {
+                return ResponseEntity.status(500).body("Failed to save feedback");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public java.util.List<Feedback> getFeedbackByUser(@PathVariable int userId) {
+        try {
+            return feedbackDAO.getFeedbackByUserId(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
+    }
+}

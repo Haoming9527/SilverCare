@@ -20,11 +20,11 @@
                 so seniors can thrive with confidence and dignity.
             </p>
             <div class="hero-actions">
-                <a href="serviceCategory.jsp" class="button button-primary">Explore Services</a>
+                <a href="serviceCategories" class="button button-primary">Explore Services</a>
                 <%
                     if (session.getAttribute("sessUserID") == null) {
                 %>
-                    <a href="register.jsp" class="button button-secondary">Become a Member</a>
+                    <a href="register" class="button button-secondary">Become a Member</a>
                 <%
                     }
                 %>

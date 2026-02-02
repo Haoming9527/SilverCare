@@ -23,17 +23,17 @@
 
                     if (userRole == null) {
                 %>
-                <li><a href="login.jsp" class="button button-primary">Login</a></li>
+                <li><a href="login" class="button button-primary">Login</a></li>
                 <%
                     } else if (isAdmin) {
                 %>
                 <li><a href="adminDashboard.jsp">Admin Dashboard</a></li>
-                <li><a href="logout.jsp" class="button button-secondary">Logout</a></li>
+                <li><a href="logout" class="button button-secondary">Logout</a></li>
                 <%
                     } else if (isCustomer) {
                 %>
-                <li><a href="bookings.jsp">My Bookings</a></li>
-                <li><a href="logout.jsp" class="button button-secondary">Logout</a></li>
+                <li><a href="myBookings">My Bookings</a></li>
+                <li><a href="logout" class="button button-secondary">Logout</a></li>
                 <%
                     } else {
                 %>
