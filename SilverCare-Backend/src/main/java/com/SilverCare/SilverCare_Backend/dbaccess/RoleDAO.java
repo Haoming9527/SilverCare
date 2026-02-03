@@ -23,7 +23,6 @@ public class RoleDAO {
                 rBean.setRoleName(rs.getString("role_name"));
             }
         } catch (SQLException e) {
-            System.out.println("RoleDAO - Error: " + e.getMessage());
         } finally {
             try {
                 if (conn != null) conn.close();

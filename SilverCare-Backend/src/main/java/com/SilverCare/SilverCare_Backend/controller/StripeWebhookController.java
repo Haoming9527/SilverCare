@@ -39,7 +39,10 @@ public class StripeWebhookController {
                 Map<String, String> metadata = session.getMetadata();
                 
                 try {
-                    if (metadata != null && !metadata.isEmpty()) {
+                    if (metadata != null && 
+                        metadata.containsKey("user_id") && 
+                        metadata.containsKey("service_id") && 
+                        metadata.containsKey("scheduled_date")) {
                         Booking booking = new Booking();
                         booking.setUserId(Integer.parseInt(metadata.get("user_id")));
                         booking.setServiceId(Integer.parseInt(metadata.get("service_id")));

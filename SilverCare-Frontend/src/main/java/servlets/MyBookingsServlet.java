@@ -42,11 +42,7 @@ public class MyBookingsServlet extends HttpServlet {
             if (bookingResponse.getStatus() == HttpServletResponse.SC_OK) {
                 bookings = bookingResponse.readEntity(new GenericType<List<Booking>>() {});
                 request.setAttribute("bookings", bookings);
-            } else {
-                 // Handle booking fetch error
-                 String errorMsg = bookingResponse.readEntity(String.class);
-                 System.out.println("Booking Fetch Error: " + errorMsg);
-            }
+            } 
 
             // Fetch Feedback
             if(bookings != null && !bookings.isEmpty()) {

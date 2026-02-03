@@ -39,8 +39,8 @@
         <div class="status-message status-success status-message-centered" style="margin-bottom: 30px;">
             <% if ("feedbackSaved".equals(successParam)) { %>
                 <strong>Thank You!</strong> Your feedback has been submitted successfully.
-            <% } else { %>
-                <strong>Success!</strong> Your booking has been received. We'll contact you shortly.
+            <% } else if ("completed".equals(successParam)) { %>
+                <strong>Excellent!</strong> Thank you for enjoying our service. We hope to see you again!
             <% } %>
         </div>
     <% } %>

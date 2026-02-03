@@ -21,6 +21,7 @@ import models.User;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URLEncoder;
 
 @WebServlet("/saveBooking")
 public class SaveBookingServlet extends HttpServlet {
@@ -70,7 +71,8 @@ public class SaveBookingServlet extends HttpServlet {
                     response.sendRedirect("bookingForm.jsp?error=no_payment_url&service_id=" + serviceIdStr);
                 }
             } else {
-                response.sendRedirect("bookingForm.jsp?error=api_error&service_id=" + serviceIdStr);
+                String errorMsg = apiResponse.readEntity(String.class);
+                response.sendRedirect("bookingForm.jsp?error=" + URLEncoder.encode(errorMsg, "UTF-8") + "&service_id=" + serviceIdStr);
             }
             client.close();
         } catch (Exception e) {

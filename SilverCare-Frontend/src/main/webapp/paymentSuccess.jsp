@@ -44,7 +44,7 @@
             
             <div class="success-actions" style="display: flex; gap: 20px; justify-content: center;">
                 <a href="myBookings" class="button button-primary" style="padding: 1rem 2rem;">Go to My Bookings</a>
-                <a href="home.jsp" class="button button-secondary" style="padding: 1rem 2rem;">Back to Home</a>
+                <a href="index.jsp" class="button button-secondary" style="padding: 1rem 2rem;">Back to Home</a>
             </div>
         </div>
     </div>

@@ -32,9 +32,16 @@ public class BookingController {
     public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
         Map<String, Object> response = new HashMap<>();
         try {
+            // Validate date is in the future
+            java.time.LocalDateTime scheduledDate = java.time.LocalDateTime.parse(
+                booking.getScheduledDate().replace(" ", "T")
+            );
+            if (scheduledDate.isBefore(java.time.LocalDateTime.now())) {
+                return ResponseEntity.status(400).body("Booking date must be in the future");
+            }
+
             Service service = serviceDAO.getServiceById(booking.getServiceId());
             if (service == null) {
-                System.out.println("Service not found: " + booking.getServiceId());
                 return ResponseEntity.status(404).body("Service not found");
             }
             booking.setServiceName(service.getServiceName());
@@ -46,7 +53,6 @@ public class BookingController {
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.out.println("Error creating booking: " + e.toString());
             return ResponseEntity.status(500).body("Error creating booking: " + e.getMessage());
         }
     }
@@ -60,7 +66,6 @@ public class BookingController {
             bookings = bookingDAO.getBookingsByUserId(userId);
             return ResponseEntity.ok(bookings);
         } catch (Exception e) {
-            System.out.println("Error fetching bookings: " + e.toString());
             return ResponseEntity.status(500).body("Error fetching bookings: " + e.getMessage());
         }
     }
@@ -73,7 +78,6 @@ public class BookingController {
         boolean success = false;
         try {
             String cleanStatus = status.replace("\"", "");
-            System.out.println("Updating status for booking " + id + " to: " + cleanStatus);
             success = bookingDAO.updateBookingStatus(id, cleanStatus);
         } catch (Exception e) {
             System.out.println("Error updating booking status: " + e.toString());

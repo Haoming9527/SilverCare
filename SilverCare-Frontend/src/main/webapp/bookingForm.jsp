@@ -25,6 +25,13 @@
 <main class="container" style="max-width: 600px; margin: 40px auto; padding: 20px;">
     <div class="auth-card" style="padding: 30px;">
         <h2 style="text-align: center; margin-bottom: 20px;">Book Service: <%= serviceName %></h2>
+        
+        <% String error = request.getParameter("error"); %>
+        <% if (error != null) { %>
+            <div class="error-message" style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 4px; margin-bottom: 20px; text-align: center; border: 1px solid #fecaca;">
+                <%= error %>
+            </div>
+        <% } %>
 
         <form action="saveBooking" method="post">
             <input type="hidden" name="service_id" value="<%= serviceId %>">

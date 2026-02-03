@@ -17,7 +17,6 @@ public class RoleController {
             RoleDAO roleDAO = new RoleDAO();
             role = roleDAO.getRoleById(id);
         } catch (Exception e) {
-            System.out.println(e.toString());
         }
         return role;
     }
