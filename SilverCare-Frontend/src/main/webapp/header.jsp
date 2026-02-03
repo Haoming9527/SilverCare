@@ -37,7 +37,7 @@
                 <%
                     } else {
                 %>
-                <li><a href="logout.jsp" class="button button-secondary">Logout</a></li>
+                <li><a href="logout" class="button button-secondary">Logout</a></li>
                 <%
                     }
                 %>

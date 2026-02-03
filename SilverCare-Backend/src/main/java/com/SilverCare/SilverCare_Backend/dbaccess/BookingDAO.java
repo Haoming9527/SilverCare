@@ -19,13 +19,14 @@ public class BookingDAO {
             conn.setAutoCommit(false); // Start transaction
 
             // Insert into booking
-            String sql = "INSERT INTO silvercare.booking (user_id, scheduled_date, specific_caregiver, special_request, status) VALUES (?, ?, ?, ?, ?) RETURNING id";
+            String sql = "INSERT INTO silvercare.booking (user_id, scheduled_date, specific_caregiver, special_request, status, stripe_session_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
             ps = conn.prepareStatement(sql);
             ps.setInt(1, booking.getUserId());
             ps.setTimestamp(2, java.sql.Timestamp.valueOf(booking.getScheduledDate()));
             ps.setString(3, booking.getSpecificCaregiver());
             ps.setString(4, booking.getSpecialRequest());
-            ps.setString(5, "Pending");
+            ps.setString(5, booking.getStatus());
+            ps.setString(6, booking.getStripeSessionId());
 
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -79,6 +80,7 @@ public class BookingDAO {
                 b.setStatus(rs.getString("status"));
                 b.setServiceName(rs.getString("service_name"));
                 b.setPrice(rs.getDouble("price"));
+                b.setStripeSessionId(rs.getString("stripe_session_id"));
                 bookings.add(b);
 
             }

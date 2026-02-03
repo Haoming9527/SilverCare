@@ -1,6 +1,6 @@
 package models;
 
-public class Feedback implements java.io.Serializable {
+public class Feedback {
     private int id;
     private int userId;
     private int bookingId;

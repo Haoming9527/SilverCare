@@ -17,6 +17,7 @@ public class Booking {
     private int serviceId;
     private String serviceName;
     private double price;
+    private String stripeSessionId;
 
     public Booking() {}
 
@@ -98,5 +99,13 @@ public class Booking {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
     }
 }

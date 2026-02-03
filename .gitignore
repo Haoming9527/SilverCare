@@ -1,0 +1,4 @@
+# Secrets
+SilverCare-Backend/src/main/resources/application.properties
+.env
+local.properties

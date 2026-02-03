@@ -58,7 +58,7 @@
                             <% if (session.getAttribute("user") != null) { %>
                                 <a href="bookingForm.jsp?service_id=<%= svc.getId() %>&service_name=<%= java.net.URLEncoder.encode(svc.getServiceName(), "UTF-8") %>" class="button button-primary" style="display: block; text-align: center; width: 100%;">Book Now</a>
                             <% } else { %>
-                                <a href="login.jsp" class="button button-secondary" style="display: block; text-align: center; width: 100%;">Login to Book</a>
+                                <a href="login" class="button button-secondary" style="display: block; text-align: center; width: 100%;">Login to Book</a>
                             <% } %>
                             </div>
                         </div>

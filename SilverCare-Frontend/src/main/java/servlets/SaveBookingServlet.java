@@ -11,11 +11,16 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+
+
 import models.Booking;
 import models.User;
 
 import java.io.IOException;
-import java.io.IOException;
+import java.io.StringReader;
 
 @WebServlet("/saveBooking")
 public class SaveBookingServlet extends HttpServlet {
@@ -36,7 +41,7 @@ public class SaveBookingServlet extends HttpServlet {
         String scheduledTime = request.getParameter("scheduled_time");
         String specificCaregiver = request.getParameter("specific_caregiver");
         String specialRequest = request.getParameter("special_request");
-
+     
         try {
             Booking booking = new Booking();
             booking.setUserId(user.getId());
@@ -54,11 +59,15 @@ public class SaveBookingServlet extends HttpServlet {
                     .post(Entity.entity(booking, MediaType.APPLICATION_JSON));
 
             if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
-                int bookingId = apiResponse.readEntity(Integer.class);
-                if (bookingId > 0) {
-                    response.sendRedirect("myBookings?success=true");
+                String jsonResponse = apiResponse.readEntity(String.class);
+                JsonReader jsonReader = Json.createReader(new StringReader(jsonResponse));
+                JsonObject object = jsonReader.readObject();
+                String paymentUrl = object.getString("paymentUrl");
+                
+                if (paymentUrl != null && !paymentUrl.isEmpty()) {
+                    response.sendRedirect(paymentUrl);
                 } else {
-                    response.sendRedirect("bookingForm.jsp?error=database_error&service_id=" + serviceIdStr);
+                    response.sendRedirect("bookingForm.jsp?error=no_payment_url&service_id=" + serviceIdStr);
                 }
             } else {
                 response.sendRedirect("bookingForm.jsp?error=api_error&service_id=" + serviceIdStr);

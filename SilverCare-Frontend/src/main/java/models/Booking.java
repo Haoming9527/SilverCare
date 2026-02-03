@@ -1,8 +1,8 @@
 package models;
 
 // Force rebuild
-public class Booking implements java.io.Serializable {
-    private int id;
+public class Booking  {
+	private int id;
     private int userId;
     
     private String bookingDate;
@@ -95,5 +95,15 @@ public class Booking implements java.io.Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    private String stripeSessionId;
+
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
     }
 }
