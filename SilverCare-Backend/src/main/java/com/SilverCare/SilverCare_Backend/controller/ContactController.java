@@ -24,4 +24,17 @@ public class ContactController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/all")
+    public java.util.List<ContactMessage> getAllMessages() {
+        return contactDAO.getAllMessages();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteMessage(@PathVariable int id) {
+        if (contactDAO.deleteMessage(id)) {
+            return ResponseEntity.ok("Message deleted successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to delete message");
+    }
 }

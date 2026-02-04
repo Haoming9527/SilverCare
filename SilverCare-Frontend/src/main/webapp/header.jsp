@@ -27,7 +27,7 @@
                 <%
                     } else if (isAdmin) {
                 %>
-                <li><a href="adminDashboard.jsp">Admin Dashboard</a></li>
+                <li><a href="adminDashboard">Admin Dashboard</a></li>
                 <li><a href="logout" class="button button-secondary">Logout</a></li>
                 <%
                     } else if (isCustomer) {

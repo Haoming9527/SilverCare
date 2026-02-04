@@ -60,4 +60,53 @@ public class ServiceCategoryDAO {
         }
         return cat;
     }
+
+    public boolean addCategory(ServiceCategory category) {
+        Connection conn = null;
+        String sql = "INSERT INTO silvercare.service_category (category_name) VALUES (?)";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, category.getCategoryName());
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    public boolean updateCategory(ServiceCategory category) {
+        Connection conn = null;
+        String sql = "UPDATE silvercare.service_category SET category_name = ? WHERE id = ?";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, category.getCategoryName());
+            pstmt.setInt(2, category.getId());
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    public boolean deleteCategory(int id) {
+        Connection conn = null;
+        String sql = "DELETE FROM silvercare.service_category WHERE id = ?";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 }

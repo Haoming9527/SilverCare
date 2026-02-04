@@ -35,4 +35,17 @@ public class FeedbackController {
             return new java.util.ArrayList<>();
         }
     }
+
+    @GetMapping("/all")
+    public java.util.List<Feedback> getAllFeedback() {
+        return feedbackDAO.getAllFeedback();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteFeedback(@PathVariable int id) {
+        if (feedbackDAO.deleteFeedback(id)) {
+            return ResponseEntity.ok("Feedback deleted successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to delete feedback");
+    }
 }

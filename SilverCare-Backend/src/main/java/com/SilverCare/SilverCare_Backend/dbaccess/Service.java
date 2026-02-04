@@ -6,6 +6,7 @@ public class Service {
     private String description;
     private double price;
     private int categoryId;
+    private String categoryName;
     private String imageUrl;
 
     public Service() {}
@@ -65,5 +66,13 @@ public class Service {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

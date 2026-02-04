@@ -39,4 +39,15 @@ public class UserController {
         }
         return rec;
     }
+
+    @GetMapping("/all")
+    public java.util.List<User> getAllUsers() {
+        try {
+            UserDAO userDAO = new UserDAO();
+            return userDAO.getAllUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
+    }
 }

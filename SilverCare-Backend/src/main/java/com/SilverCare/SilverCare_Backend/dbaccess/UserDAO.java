@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
 
@@ -89,5 +91,29 @@ public class UserDAO {
             }
         }
         return uBean;
+    }
+
+    public List<User> getAllUsers() {
+        List<User> userList = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM silvercare.users ORDER BY id ASC";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setEmail(rs.getString("email"));
+                u.setRole(rs.getInt("role"));
+                userList.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return userList;
     }
 }

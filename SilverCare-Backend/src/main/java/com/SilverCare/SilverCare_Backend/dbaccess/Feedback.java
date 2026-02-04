@@ -6,6 +6,8 @@ public class Feedback {
     private int bookingId;
     private int rating;
     private String comment;
+    private String username;
+    private String serviceName;
 
     public Feedback() {}
 
@@ -47,5 +49,21 @@ public class Feedback {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 }
