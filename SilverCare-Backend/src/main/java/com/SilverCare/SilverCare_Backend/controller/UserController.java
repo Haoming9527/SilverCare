@@ -1,12 +1,18 @@
 package com.SilverCare.SilverCare_Backend.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 import com.SilverCare.SilverCare_Backend.dbaccess.User;
 import com.SilverCare.SilverCare_Backend.dbaccess.UserDAO;
+import com.SilverCare.SilverCare_Backend.service.PasswordService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    private PasswordService passwordService;
 
     @RequestMapping(
             path = "/login",
@@ -16,8 +22,23 @@ public class UserController {
         User user = null;
         try {
             UserDAO userDAO = new UserDAO();
-            user = userDAO.login(loginRequest.getEmail(), loginRequest.getPassword());
+            user = userDAO.getUserByEmail(loginRequest.getEmail());
+            
+            if (user != null) {
+                if (passwordService.checkPassword(loginRequest.getPassword(), user.getPassword())) {
+                    return user;
+                } 
+                
+                if (loginRequest.getPassword().equals(user.getPassword())) {
+                    user.setPassword(passwordService.hashPassword(loginRequest.getPassword()));
+                    userDAO.updateUser(user);
+                    return user;
+                }
+                
+                return null; 
+            }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return user;
     }
@@ -31,11 +52,14 @@ public class UserController {
         try {
             UserDAO userDAO = new UserDAO();
             if (!userDAO.emailExists(user.getEmail())) {
+                // Hash the password before saving
+                user.setPassword(passwordService.hashPassword(user.getPassword()));
                 rec = userDAO.registerUser(user);
             } else {
                 rec = -1; // Indicate email exists
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return rec;
     }
@@ -48,6 +72,32 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             return new java.util.ArrayList<>();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody User user) {
+        try {
+            UserDAO userDAO = new UserDAO();
+            user.setId(id);
+            
+            User existingUser = userDAO.getUserByEmail(user.getEmail()); 
+            
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                user.setPassword(passwordService.hashPassword(user.getPassword()));
+            } else if (existingUser != null) {
+                user.setPassword(existingUser.getPassword());
+            }
+            
+            int result = userDAO.updateUser(user);
+            if (result > 0) {
+                return ResponseEntity.ok().body("{\"message\": \"User updated successfully\"}");
+            } else {
+                return ResponseEntity.status(500).body("{\"message\": \"Failed to update user\"}");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("{\"message\": \"Server error\"}");
         }
     }
 }

@@ -60,15 +60,14 @@ public class UserDAO {
 
     // ================= LOGIN =================
 
-    public User login(String email, String password) {
+    public User getUserByEmail(String email) {
         User uBean = null;
         Connection conn = null;
         try {
             conn = DBConnection.getConnection();
-            String sql = "SELECT * FROM silvercare.users WHERE email = ? AND password = ?";
+            String sql = "SELECT * FROM silvercare.users WHERE email = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
-            ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
 
@@ -79,6 +78,10 @@ public class UserDAO {
                 uBean.setEmail(rs.getString("email"));
                 uBean.setPassword(rs.getString("password"));
                 uBean.setRole(rs.getInt("role"));
+                uBean.setPhone(rs.getString("phone"));
+                uBean.setAddress(rs.getString("address"));
+                uBean.setHealthInfo(rs.getString("health_info"));
+                uBean.setPreferences(rs.getString("preferences"));
 
             }
         } catch (SQLException e) {
@@ -115,5 +118,34 @@ public class UserDAO {
             try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
         return userList;
+    }
+
+    public int updateUser(User user) {
+        Connection conn = null;
+        int rowsAffected = 0;
+        try {
+            conn = DBConnection.getConnection();
+            String sql = "UPDATE silvercare.users SET username = ?, email = ?, password = ?, phone = ?, address = ?, health_info = ?, preferences = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setString(4, user.getPhone());
+            ps.setString(5, user.getAddress());
+            ps.setString(6, user.getHealthInfo());
+            ps.setString(7, user.getPreferences());
+            ps.setInt(8, user.getId());
+
+            rowsAffected = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return rowsAffected;
     }
 }

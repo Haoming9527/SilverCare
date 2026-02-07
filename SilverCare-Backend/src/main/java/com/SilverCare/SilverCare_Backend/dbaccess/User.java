@@ -7,6 +7,10 @@ public class User {
     private String email;
     private String password;
     private int role;
+    private String phone;
+    private String address;
+    private String healthInfo;
+    private String preferences;
 
     // No-argument constructor 
     public User() {
@@ -68,5 +72,37 @@ public class User {
 
     public void setRole(int role) {
         this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getHealthInfo() {
+        return healthInfo;
+    }
+
+    public void setHealthInfo(String healthInfo) {
+        this.healthInfo = healthInfo;
+    }
+
+    public String getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(String preferences) {
+        this.preferences = preferences;
     }
 }
