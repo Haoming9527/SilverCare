@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="models.Service" %>
 <%@ page import="models.User" %>
+<%@ page import="models.Booking" %>
 <%@ page import="models.Feedback" %>
 <%@ page import="models.ContactMessage" %>
 <%@ page import="models.ServiceCategory" %>
@@ -74,6 +75,7 @@
     List<models.User> users = (List<models.User>) request.getAttribute("users");
     List<models.Feedback> feedbacks = (List<models.Feedback>) request.getAttribute("feedbacks");
     List<models.ContactMessage> messages = (List<models.ContactMessage>) request.getAttribute("messages");
+    List<models.Booking> allBookings = (List<models.Booking>) request.getAttribute("bookings");
 %>
 
 <main class="container">
@@ -81,6 +83,28 @@
         <div>
             <h1>Admin Dashboard</h1>
             <p>Welcome, Administrator</p>
+            
+            <%-- Status Messages --%>
+            <% 
+                String successParam = request.getParameter("success");
+                String errorParam = request.getParameter("error");
+            %>
+            
+            <% if (successParam != null) { %>
+                <div style="margin-top: 15px; padding: 10px 15px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; font-size: 0.9rem;">
+                    <% if ("checkin_success".equals(successParam)) { %>
+                        <strong>Success!</strong> Caregiver checked in successfully.
+                    <% } else if ("checkout_success".equals(successParam)) { %>
+                        <strong>Success!</strong> Caregiver checked out successfully.
+                    <% } %>
+                </div>
+            <% } %>
+            
+            <% if (errorParam != null) { %>
+                <div style="margin-top: 15px; padding: 10px 15px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Error!</strong> Failed to process the status update.
+                </div>
+            <% } %>
         </div>
         <div>
             <a href="addService" class="button button-primary">+ Add Service</a>
@@ -94,6 +118,7 @@
         <button class="dashboard-tab" onclick="showTab('users', this)">Clients</button>
         <button class="dashboard-tab" onclick="showTab('feedback', this)">Feedback</button>
         <button class="dashboard-tab" onclick="showTab('messages', this)">Messages</button>
+        <button class="dashboard-tab" onclick="showTab('visits', this)">Care Visits</button>
     </div>
 
     <!-- Services Tab -->
@@ -233,6 +258,63 @@
                                 <input type="hidden" name="id" value="<%= m.getId() %>">
                                 <button type="submit" class="chip-button chip-button-danger">Delete</button>
                             </form>
+                        </td>
+                    </tr>
+                <% } } %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Care Visits Tab -->
+    <div id="visits-tab" class="tab-content">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client ID</th>
+                    <th>Service</th>
+                    <th>Caregiver</th>
+                    <th>Scheduled Date</th>
+                    <th>Status</th>
+                    <th>Track Points</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (allBookings != null) { for (Booking b : allBookings) { %>
+                    <tr>
+                        <td><%= b.getId() %></td>
+                        <td><%= b.getUserId() %></td>
+                        <td><%= b.getServiceName() %></td>
+                        <td><%= (b.getSpecificCaregiver() != null && !b.getSpecificCaregiver().isEmpty()) ? b.getSpecificCaregiver() : "Any" %></td>
+                        <td><%= b.getScheduledDate() != null ? b.getScheduledDate().substring(0, 16).replace("T", " ") : "---" %></td>
+                        <td>
+                            <span class="status-badge status-<%= b.getStatus().toLowerCase().replace(" ", "-") %>">
+                                <%= b.getStatus() %>
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.85em;">
+                                <div>In: <%= b.getCheckInTime() != null ? b.getCheckInTime().substring(0, 16).replace("T", " ") : "---" %></div>
+                                <div>Out: <%= b.getCheckOutTime() != null ? b.getCheckOutTime().substring(0, 16).replace("T", " ") : "---" %></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 5px;">
+                                <% if ("Pending".equalsIgnoreCase(b.getStatus()) && b.getCheckOutTime() == null) { %>
+                                    <form action="handleCareVisit" method="post" style="display:inline;">
+                                        <input type="hidden" name="bookingId" value="<%= b.getId() %>">
+                                        <input type="hidden" name="action" value="checkin">
+                                        <button type="submit" class="chip-button chip-button-primary">Check In</button>
+                                    </form>
+                                <% } else if ("In Progress".equalsIgnoreCase(b.getStatus())) { %>
+                                    <form action="handleCareVisit" method="post" style="display:inline;">
+                                        <input type="hidden" name="bookingId" value="<%= b.getId() %>">
+                                        <input type="hidden" name="action" value="checkout">
+                                        <button type="submit" class="chip-button" style="background: #27ae60; color: white;">Check Out</button>
+                                    </form>
+                                <% } %>
+                            </div>
                         </td>
                     </tr>
                 <% } } %>

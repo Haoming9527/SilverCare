@@ -18,6 +18,8 @@ public class Booking {
     private String serviceName;
     private double price;
     private String stripeSessionId;
+    private String checkInTime;
+    private String checkOutTime;
 
     public Booking() {}
 
@@ -107,5 +109,21 @@ public class Booking {
 
     public void setStripeSessionId(String stripeSessionId) {
         this.stripeSessionId = stripeSessionId;
+    }
+
+    public String getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(String checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public String getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(String checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 }

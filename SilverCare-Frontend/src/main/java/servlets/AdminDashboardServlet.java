@@ -51,11 +51,16 @@ public class AdminDashboardServlet extends HttpServlet {
                     .request(MediaType.APPLICATION_JSON)
                     .get(new GenericType<List<ServiceCategory>>() {});
 
+            List<Booking> bookings = client.target(API_BASE_URL + "/bookings/all")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(new GenericType<List<Booking>>() {});
+
             request.setAttribute("users", users);
             request.setAttribute("services", services);
             request.setAttribute("feedbacks", feedbacks);
             request.setAttribute("messages", messages);
             request.setAttribute("categories", categories);
+            request.setAttribute("bookings", bookings);
 
             request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
         } catch (Exception e) {

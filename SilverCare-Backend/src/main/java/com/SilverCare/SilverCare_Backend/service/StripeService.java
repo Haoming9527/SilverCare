@@ -21,6 +21,9 @@ public class StripeService {
     @Value("${app.client.url}")
     private String clientUrl;
 
+    @Value("${stripe.tax.rate.id}")
+    private String taxRateId;
+
     @PostConstruct
     public void init() {
         Stripe.apiKey = stripeApiKey;
@@ -34,6 +37,7 @@ public class StripeService {
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
+                                .addTaxRate(taxRateId)
                                 .setPriceData(
                                         SessionCreateParams.LineItem.PriceData.builder()
                                                 .setCurrency("sgd")

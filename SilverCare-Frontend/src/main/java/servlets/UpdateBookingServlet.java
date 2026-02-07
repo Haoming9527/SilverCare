@@ -1,0 +1,66 @@
+package servlets;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import models.Booking;
+
+import java.io.IOException;
+
+@WebServlet("/updateBooking")
+public class UpdateBookingServlet extends HttpServlet {
+    private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String bookingIdStr = request.getParameter("bookingId");
+        String scheduledDate = request.getParameter("scheduledDate");
+        String caregiver = request.getParameter("caregiver");
+        String specialRequest = request.getParameter("specialRequest");
+
+        if (bookingIdStr == null || bookingIdStr.isEmpty() || scheduledDate == null || scheduledDate.isEmpty()) {
+            response.sendRedirect("myBookings?error=missing_data");
+            return;
+        }
+
+        try {
+            java.time.LocalDateTime selected = java.time.LocalDateTime.parse(scheduledDate);
+            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+            if (selected.isBefore(now)) {
+                response.sendRedirect("myBookings?error=past_date");
+                return;
+            }
+        } catch (Exception e) {
+        }
+
+        Client client = ClientBuilder.newClient();
+        try {
+            Booking booking = new Booking();
+            booking.setId(Integer.parseInt(bookingIdStr));
+            booking.setScheduledDate(scheduledDate);
+            booking.setSpecificCaregiver(caregiver);
+            booking.setSpecialRequest(specialRequest);
+
+            Response apiResponse = client.target(API_BASE_URL + "/update")
+                    .request(MediaType.APPLICATION_JSON)
+                    .put(Entity.entity(booking, MediaType.APPLICATION_JSON));
+
+            if (apiResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+                response.sendRedirect("myBookings?success=updated");
+            } else {
+                response.sendRedirect("myBookings?error=update_failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("myBookings?error=error");
+        } finally {
+            client.close();
+        }
+    }
+}

@@ -84,4 +84,56 @@ public class BookingController {
         }
         return success;
     }
+
+    @RequestMapping(
+            path = "/update",
+            consumes = "application/json",
+            method = RequestMethod.PUT)
+    public ResponseEntity<String> updateBooking(@RequestBody Booking booking) {
+        if (bookingDAO.updateBooking(booking)) {
+            return ResponseEntity.ok("Booking updated successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to update booking");
+    }
+
+    @RequestMapping(
+            path = "/all",
+            method = RequestMethod.GET)
+    public ResponseEntity<?> getAllBookings() {
+        try {
+            return ResponseEntity.ok(bookingDAO.getAllBookings());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching all bookings: " + e.getMessage());
+        }
+    }
+
+    @RequestMapping(
+            path = "/{id}/checkin",
+            method = RequestMethod.PUT)
+    public ResponseEntity<String> checkIn(@PathVariable int id) {
+        if (bookingDAO.checkIn(id)) {
+            return ResponseEntity.ok("Checked in successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to check in");
+    }
+
+    @RequestMapping(
+            path = "/{id}/checkout",
+            method = RequestMethod.PUT)
+    public ResponseEntity<String> checkOut(@PathVariable int id) {
+        if (bookingDAO.checkOut(id)) {
+            return ResponseEntity.ok("Checked out successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to check out");
+    }
+
+    @RequestMapping(
+            path = "/delete/{id}",
+            method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteBooking(@PathVariable int id) {
+        if (bookingDAO.deleteBooking(id)) {
+            return ResponseEntity.ok("Booking deleted successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to delete booking");
+    }
 }
