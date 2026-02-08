@@ -1970,3 +1970,69 @@ textarea {
     margin-top: 15px;
 }
 
+
+/* ==============================
+   Activity Logs Styles
+   ============================== */
+.logs-container {
+    margin-top: 20px;
+}
+
+/* Base Data Table (Shared) */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: 600;
+}
+
+.data-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #666;
+}
+
+.error-message {
+    color: #e74c3c;
+    padding: 10px;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.action-cell {
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.timestamp-cell {
+    white-space: nowrap;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* ==============================
+   Activity Logs Page
+============================== */
+.timestamp-cell { white-space: nowrap; color: #666; font-size: 0.9em; }
+.action-cell { font-weight: bold; color: #4b63d1; }
+.logs-container { margin-top: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+

@@ -84,6 +84,11 @@
             <h1>Admin Dashboard</h1>
             <p>Welcome, Administrator</p>
             
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <a href="adminAnalytics" class="button button-primary">View Analytics</a>
+                <a href="adminCalendar" class="button button-primary" style="background: #2ecc71;">Booking Calendar</a>
+            </div>
+            
             <%-- Status Messages --%>
             <% 
                 String successParam = request.getParameter("success");
@@ -109,19 +114,26 @@
         <div>
             <a href="addService" class="button button-primary">+ Add Service</a>
             <a href="manageCategory" class="button button-secondary">Manage Categories</a>
+            <a href="logs" class="button button-secondary">Activity Logs</a>
         </div>
     </div>
 
+    <%
+        String activeTab = request.getParameter("tab");
+        if (activeTab == null || activeTab.isEmpty()) activeTab = "services";
+    %>
+
     <div class="dashboard-tabs">
-        <button class="dashboard-tab active" onclick="showTab('services', this)">Services</button>
-        <button class="dashboard-tab" onclick="showTab('categories', this)">Categories</button>
-        <button class="dashboard-tab" onclick="showTab('users', this)">Clients</button>
-        <button class="dashboard-tab" onclick="showTab('feedback', this)">Feedback</button>
-        <button class="dashboard-tab" onclick="showTab('messages', this)">Messages</button>
-        <button class="dashboard-tab" onclick="showTab('visits', this)">Care Visits</button>
+        <a href="adminDashboard?tab=services" class="dashboard-tab <%= "services".equals(activeTab) ? "active" : "" %>" style="text-decoration: none;">Services</a>
+        <a href="adminDashboard?tab=categories" class="dashboard-tab <%= "categories".equals(activeTab) ? "active" : "" %>" style="text-decoration: none;">Categories</a>
+        <a href="adminDashboard?tab=users" class="dashboard-tab <%= "users".equals(activeTab) ? "active" : "" %>" style="text-decoration: none;">Clients</a>
+        <a href="adminDashboard?tab=feedback" class="dashboard-tab <%= "feedback".equals(activeTab) ? "active" : "" %>" style="text-decoration: none;">Feedback</a>
+        <a href="adminDashboard?tab=messages" class="dashboard-tab <%= "messages".equals(activeTab) ? "active" : "" %>" style="text-decoration: none;">Messages</a>
+        <a href="adminDashboard?tab=visits" class="dashboard-tab <%= "visits".equals(activeTab) ? "active" : "" %>" style="text-decoration: none;">Care Visits</a>
     </div>
 
     <!-- Services Tab -->
+    <% if ("services".equals(activeTab)) { %>
     <div id="services-tab" class="tab-content active">
         <table class="data-table">
             <thead>
@@ -140,7 +152,7 @@
                         <td>$<%= String.format("%.2f", s.getPrice()) %></td>
                         <td>
                             <a href="editService?id=<%= s.getId() %>" class="chip-button chip-button-primary">Edit</a>
-                            <form action="manageService" method="post" style="display:inline;" onsubmit="return confirm('Delete this service?')">
+                            <form action="manageService" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<%= s.getId() %>">
                                 <button type="submit" class="chip-button chip-button-danger">Delete</button>
@@ -151,9 +163,11 @@
             </tbody>
         </table>
     </div>
+    <% } %>
 
     <!-- Categories Tab -->
-    <div id="categories-tab" class="tab-content">
+    <% if ("categories".equals(activeTab)) { %>
+    <div id="categories-tab" class="tab-content active">
         <table class="data-table">
             <thead>
                 <tr>
@@ -174,9 +188,11 @@
             </tbody>
         </table>
     </div>
+    <% } %>
 
     <!-- Users Tab -->
-    <div id="users-tab" class="tab-content">
+    <% if ("users".equals(activeTab)) { %>
+    <div id="users-tab" class="tab-content active">
         <table class="data-table">
             <thead>
                 <tr>
@@ -198,9 +214,11 @@
             </tbody>
         </table>
     </div>
+    <% } %>
 
     <!-- Feedback Tab -->
-    <div id="feedback-tab" class="tab-content">
+    <% if ("feedback".equals(activeTab)) { %>
+    <div id="feedback-tab" class="tab-content active">
         <table class="data-table">
             <thead>
                 <tr>
@@ -221,7 +239,7 @@
                         <td><%= f.getRating() %>/5</td>
                         <td><%= f.getComment() %></td>
                         <td>
-                            <form action="manageFeedback" method="post" style="display:inline;" onsubmit="return confirm('Delete this feedback?')">
+                            <form action="manageFeedback" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<%= f.getId() %>">
                                 <button type="submit" class="chip-button chip-button-danger">Delete</button>
@@ -232,9 +250,11 @@
             </tbody>
         </table>
     </div>
+    <% } %>
 
     <!-- Messages Tab -->
-    <div id="messages-tab" class="tab-content">
+    <% if ("messages".equals(activeTab)) { %>
+    <div id="messages-tab" class="tab-content active">
         <table class="data-table">
             <thead>
                 <tr>
@@ -253,7 +273,7 @@
                         <td><%= m.getSubject() %></td>
                         <td><%= m.getMessage() %></td>
                         <td>
-                            <form action="manageMessage" method="post" style="display:inline;" onsubmit="return confirm('Delete this message?')">
+                            <form action="manageMessage" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<%= m.getId() %>">
                                 <button type="submit" class="chip-button chip-button-danger">Delete</button>
@@ -264,9 +284,11 @@
             </tbody>
         </table>
     </div>
+    <% } %>
 
     <!-- Care Visits Tab -->
-    <div id="visits-tab" class="tab-content">
+    <% if ("visits".equals(activeTab)) { %>
+    <div id="visits-tab" class="tab-content active">
         <table class="data-table">
             <thead>
                 <tr>
@@ -321,16 +343,8 @@
             </tbody>
         </table>
     </div>
+    <% } %>
 </main>
-
-<script>
-    function showTab(tabName, element) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.dashboard-tab').forEach(tab => tab.classList.remove('active'));
-        document.getElementById(tabName + '-tab').classList.add('active');
-        element.classList.add('active');
-    }
-</script>
 
 <jsp:include page="footer.html" />
 </body>

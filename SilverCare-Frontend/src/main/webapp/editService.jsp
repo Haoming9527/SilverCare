@@ -12,7 +12,10 @@
 
 <main class="container">
     <div class="form-container">
-        <h1>Edit Service</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Edit Service</h1>
+            <a href="adminDashboard" class="button button-secondary">Back to Dashboard</a>
+        </div>
         <p>Modify the details for <strong><%= ((Service)request.getAttribute("service")).getServiceName() %></strong>.</p>
 
         <% Service service = (Service) request.getAttribute("service");
@@ -50,7 +53,7 @@
                 <label for="imageUrl">Image URL (Optional)</label>
                 <input type="text" id="imageUrl" name="imageUrl" value="<%= service.getImageUrl() != null ? service.getImageUrl() : "" %>">
             </div>
-
+			<br>
             <div class="form-actions">
                 <button type="submit" class="button button-primary">Save Changes</button>
                 <a href="adminDashboard" class="button button-secondary">Cancel</a>

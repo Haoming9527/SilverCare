@@ -14,7 +14,10 @@
 <jsp:include page="header.jsp" />
 
 <main class="container">
-    <h1>Manage Service Categories</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Manage Service Categories</h1>
+        <a href="adminDashboard" class="button button-secondary">Back to Dashboard</a>
+    </div>
 
     <section class="form-container" style="margin-bottom: 30px;">
         <h3>Add New Category</h3>
@@ -24,6 +27,7 @@
                 <label for="categoryName">Category Name</label>
                 <input type="text" id="categoryName" name="categoryName" required>
             </div>
+            <br>
             <button type="submit" class="button button-primary">Add Category</button>
         </form>
     </section>
@@ -54,9 +58,6 @@
         </tbody>
     </table>
     
-    <div style="margin-top: 20px;">
-        <a href="adminDashboard" class="button button-secondary">Back to Dashboard</a>
-    </div>
 </main>
 
 <jsp:include page="footer.html" />

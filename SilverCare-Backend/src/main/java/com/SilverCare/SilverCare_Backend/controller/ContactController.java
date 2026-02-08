@@ -1,5 +1,6 @@
 package com.SilverCare.SilverCare_Backend.controller;
 
+import com.SilverCare.SilverCare_Backend.dbaccess.ActivityLogDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.ContactMessage;
 import com.SilverCare.SilverCare_Backend.dbaccess.ContactDAO;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ public class ContactController {
         try {
             boolean success = contactDAO.saveMessage(message);
             if (success) {
+                ActivityLogDAO.log(0, "SEND_CONTACT_MESSAGE", "New contact message from: " + message.getEmail());
                 return ResponseEntity.ok("Message sent successfully");
             } else {
                 return ResponseEntity.status(500).body("Failed to send message");
@@ -33,6 +35,7 @@ public class ContactController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMessage(@PathVariable int id) {
         if (contactDAO.deleteMessage(id)) {
+            ActivityLogDAO.log(0, "DELETE_CONTACT_MESSAGE", "Admin deleted contact message ID: " + id);
             return ResponseEntity.ok("Message deleted successfully");
         }
         return ResponseEntity.status(500).body("Failed to delete message");

@@ -1,5 +1,6 @@
 package com.SilverCare.SilverCare_Backend.controller;
 
+import com.SilverCare.SilverCare_Backend.dbaccess.ActivityLogDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.Service;
 import com.SilverCare.SilverCare_Backend.dbaccess.ServiceDAO;
 
@@ -38,6 +39,7 @@ public class ServiceController {
     @PostMapping("/add")
     public org.springframework.http.ResponseEntity<String> addService(@RequestBody Service service) {
         if (serviceDAO.addService(service)) {
+            ActivityLogDAO.log(0, "ADD_SERVICE", "Admin added new service: " + service.getServiceName());
             return org.springframework.http.ResponseEntity.ok("Service added successfully");
         }
         return org.springframework.http.ResponseEntity.status(500).body("Failed to add service");
@@ -46,6 +48,7 @@ public class ServiceController {
     @PutMapping("/update")
     public org.springframework.http.ResponseEntity<String> updateService(@RequestBody Service service) {
         if (serviceDAO.updateService(service)) {
+            ActivityLogDAO.log(0, "UPDATE_SERVICE", "Admin updated service ID: " + service.getId());
             return org.springframework.http.ResponseEntity.ok("Service updated successfully");
         }
         return org.springframework.http.ResponseEntity.status(500).body("Failed to update service");
@@ -54,6 +57,7 @@ public class ServiceController {
     @DeleteMapping("/delete/{id}")
     public org.springframework.http.ResponseEntity<String> deleteService(@PathVariable int id) {
         if (serviceDAO.deleteService(id)) {
+            ActivityLogDAO.log(0, "DELETE_SERVICE", "Admin deleted service ID: " + id);
             return org.springframework.http.ResponseEntity.ok("Service deleted successfully");
         }
         return org.springframework.http.ResponseEntity.status(500).body("Failed to delete service");

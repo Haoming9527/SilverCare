@@ -1,5 +1,6 @@
 package com.SilverCare.SilverCare_Backend.controller;
 
+import com.SilverCare.SilverCare_Backend.dbaccess.ActivityLogDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.Booking;
 import com.SilverCare.SilverCare_Backend.dbaccess.BookingDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.Service;
@@ -79,6 +80,9 @@ public class BookingController {
         try {
             String cleanStatus = status.replace("\"", "");
             success = bookingDAO.updateBookingStatus(id, cleanStatus);
+            if (success) {
+                ActivityLogDAO.log(0, "UPDATE_BOOKING_STATUS", "Booking ID " + id + " status updated to: " + cleanStatus);
+            }
         } catch (Exception e) {
             System.out.println("Error updating booking status: " + e.toString());
         }
@@ -91,6 +95,7 @@ public class BookingController {
             method = RequestMethod.PUT)
     public ResponseEntity<String> updateBooking(@RequestBody Booking booking) {
         if (bookingDAO.updateBooking(booking)) {
+            ActivityLogDAO.log(booking.getUserId(), "UPDATE_BOOKING", "Updated details for booking ID: " + booking.getId());
             return ResponseEntity.ok("Booking updated successfully");
         }
         return ResponseEntity.status(500).body("Failed to update booking");
@@ -112,6 +117,7 @@ public class BookingController {
             method = RequestMethod.PUT)
     public ResponseEntity<String> checkIn(@PathVariable int id) {
         if (bookingDAO.checkIn(id)) {
+            ActivityLogDAO.log(0, "CHECK_IN", "Caregiver checked in for booking ID: " + id);
             return ResponseEntity.ok("Checked in successfully");
         }
         return ResponseEntity.status(500).body("Failed to check in");
@@ -122,6 +128,7 @@ public class BookingController {
             method = RequestMethod.PUT)
     public ResponseEntity<String> checkOut(@PathVariable int id) {
         if (bookingDAO.checkOut(id)) {
+            ActivityLogDAO.log(0, "CHECK_OUT", "Caregiver checked out for booking ID: " + id);
             return ResponseEntity.ok("Checked out successfully");
         }
         return ResponseEntity.status(500).body("Failed to check out");
@@ -132,8 +139,36 @@ public class BookingController {
             method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBooking(@PathVariable int id) {
         if (bookingDAO.deleteBooking(id)) {
+            ActivityLogDAO.log(0, "DELETE_BOOKING", "Booking ID " + id + " deleted from system");
             return ResponseEntity.ok("Booking deleted successfully");
         }
         return ResponseEntity.status(500).body("Failed to delete booking");
+    }
+
+    @GetMapping("/revenue/monthly")
+    public ResponseEntity<?> getMonthlyRevenue() {
+        try {
+            return ResponseEntity.ok(bookingDAO.getMonthlyRevenueTrend());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching revenue trend: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/analytics/top-clients")
+    public ResponseEntity<?> getTopClients() {
+        try {
+            return ResponseEntity.ok(bookingDAO.getTopClients());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching top clients: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/analytics/by-service/{serviceId}")
+    public ResponseEntity<?> getUsersByService(@PathVariable int serviceId) {
+        try {
+            return ResponseEntity.ok(bookingDAO.getUsersByService(serviceId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching users by service: " + e.getMessage());
+        }
     }
 }

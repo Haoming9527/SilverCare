@@ -1,5 +1,6 @@
 package com.SilverCare.SilverCare_Backend.controller;
 
+import com.SilverCare.SilverCare_Backend.dbaccess.ActivityLogDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.Booking;
 import com.SilverCare.SilverCare_Backend.dbaccess.BookingDAO;
 import com.stripe.model.Event;
@@ -53,6 +54,7 @@ public class StripeWebhookController {
                         booking.setStripeSessionId(session.getId());
                         
                         bookingDAO.createBooking(booking);
+                        ActivityLogDAO.log(booking.getUserId(), "CREATE_BOOKING", "New booking created after payment for service ID: " + booking.getServiceId());
                     }
                 } catch (Exception e) {
                     System.out.println("Error saving booking from webhook: " + e.getMessage());

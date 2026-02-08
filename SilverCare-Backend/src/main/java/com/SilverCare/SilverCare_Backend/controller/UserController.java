@@ -2,6 +2,7 @@ package com.SilverCare.SilverCare_Backend.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import com.SilverCare.SilverCare_Backend.dbaccess.ActivityLogDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.User;
 import com.SilverCare.SilverCare_Backend.dbaccess.UserDAO;
 import com.SilverCare.SilverCare_Backend.service.PasswordService;
@@ -26,6 +27,7 @@ public class UserController {
             
             if (user != null) {
                 if (passwordService.checkPassword(loginRequest.getPassword(), user.getPassword())) {
+                    ActivityLogDAO.log(user.getId(), "LOGIN", "User logged in via email: " + user.getEmail());
                     return user;
                 } 
                 
@@ -55,6 +57,9 @@ public class UserController {
                 // Hash the password before saving
                 user.setPassword(passwordService.hashPassword(user.getPassword()));
                 rec = userDAO.registerUser(user);
+                if (rec > 0) {
+                    ActivityLogDAO.log(rec, "REGISTER", "New user registered: " + user.getEmail());
+                }
             } else {
                 rec = -1; // Indicate email exists
             }
@@ -91,6 +96,7 @@ public class UserController {
             
             int result = userDAO.updateUser(user);
             if (result > 0) {
+                ActivityLogDAO.log(id, "UPDATE_PROFILE", "User updated profile details");
                 return ResponseEntity.ok().body("{\"message\": \"User updated successfully\"}");
             } else {
                 return ResponseEntity.status(500).body("{\"message\": \"Failed to update user\"}");

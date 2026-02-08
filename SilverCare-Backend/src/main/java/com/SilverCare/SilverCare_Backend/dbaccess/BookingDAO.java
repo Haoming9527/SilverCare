@@ -2,7 +2,9 @@ package com.SilverCare.SilverCare_Backend.dbaccess;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BookingDAO {
 
@@ -225,5 +227,83 @@ public class BookingDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Map<String, Object>> getMonthlyRevenueTrend() {
+        List<Map<String, Object>> trend = new ArrayList<>();
+        String sql = "SELECT TO_CHAR(b.scheduled_date, 'YYYY-MM') as month, SUM(s.price) as revenue " +
+                     "FROM silvercare.booking b " +
+                     "JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
+                     "JOIN silvercare.service s ON bd.service_id = s.id " +
+                     "WHERE b.status != 'Cancelled' " +
+                     "GROUP BY month ORDER BY month ASC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("month", rs.getString("month"));
+                map.put("revenue", rs.getDouble("revenue"));
+                trend.add(map);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trend;
+    }
+
+    public List<Map<String, Object>> getTopClients() {
+        List<Map<String, Object>> clients = new ArrayList<>();
+        String sql = "SELECT u.username, u.id as user_id, COUNT(b.id) as total_bookings, SUM(s.price) as total_spent " +
+                     "FROM silvercare.users u " +
+                     "JOIN silvercare.booking b ON u.id = b.user_id " +
+                     "JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
+                     "JOIN silvercare.service s ON bd.service_id = s.id " +
+                     "GROUP BY u.id, u.username " +
+                     "ORDER BY total_spent DESC LIMIT 3";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("username", rs.getString("username"));
+                map.put("userId", rs.getInt("user_id"));
+                map.put("totalBookings", rs.getInt("total_bookings"));
+                map.put("totalSpent", rs.getDouble("total_spent"));
+                clients.add(map);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clients;
+    }
+
+    public List<Map<String, Object>> getUsersByService(int serviceId) {
+        List<Map<String, Object>> users = new ArrayList<>();
+        String sql = "SELECT DISTINCT u.id, u.username, u.email " +
+                     "FROM silvercare.users u " +
+                     "JOIN silvercare.booking b ON u.id = b.user_id " +
+                     "JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
+                     "WHERE bd.service_id = ? " +
+                     "ORDER BY u.username ASC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, serviceId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", rs.getInt("id"));
+                    map.put("username", rs.getString("username"));
+                    map.put("email", rs.getString("email"));
+                    users.add(map);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 }

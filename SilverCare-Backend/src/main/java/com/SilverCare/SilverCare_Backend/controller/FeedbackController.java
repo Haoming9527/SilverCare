@@ -1,5 +1,6 @@
 package com.SilverCare.SilverCare_Backend.controller;
 
+import com.SilverCare.SilverCare_Backend.dbaccess.ActivityLogDAO;
 import com.SilverCare.SilverCare_Backend.dbaccess.Feedback;
 import com.SilverCare.SilverCare_Backend.dbaccess.FeedbackDAO;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ public class FeedbackController {
         try {
             boolean success = feedbackDAO.saveFeedback(feedback);
             if (success) {
+                ActivityLogDAO.log(feedback.getUserId(), "SAVE_FEEDBACK", "User submitted feedback for Booking ID: " + feedback.getBookingId());
                 return ResponseEntity.ok("Feedback saved successfully");
             } else {
                 return ResponseEntity.status(500).body("Failed to save feedback");
@@ -44,6 +46,7 @@ public class FeedbackController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteFeedback(@PathVariable int id) {
         if (feedbackDAO.deleteFeedback(id)) {
+            ActivityLogDAO.log(0, "DELETE_FEEDBACK", "Admin deleted feedback ID: " + id);
             return ResponseEntity.ok("Feedback deleted successfully");
         }
         return ResponseEntity.status(500).body("Failed to delete feedback");

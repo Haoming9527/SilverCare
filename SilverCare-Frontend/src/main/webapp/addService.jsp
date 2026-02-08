@@ -15,7 +15,10 @@
 
 <main class="container">
     <div class="form-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h1>Add New Service</h1>
+        <a href="adminDashboard" class="button button-secondary">Back to Dashboard</a>
+    </div>
         <p>Fill in the details below to add a new care service.</p>
 
         <form action="manageService" method="post">
