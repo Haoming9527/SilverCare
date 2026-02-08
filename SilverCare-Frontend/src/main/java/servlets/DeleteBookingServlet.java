@@ -16,6 +16,12 @@ public class DeleteBookingServlet extends HttpServlet {
     private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
         String bookingIdStr = request.getParameter("bookingId");
         
         if (bookingIdStr == null || bookingIdStr.isEmpty()) {

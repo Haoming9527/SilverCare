@@ -21,10 +21,8 @@ public class CompleteBookingServlet extends HttpServlet {
     private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-
-        if (user == null) {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
             response.sendRedirect("login.jsp");
             return;
         }

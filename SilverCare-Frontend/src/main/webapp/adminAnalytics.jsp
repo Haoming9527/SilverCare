@@ -1,4 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String role = (String) session.getAttribute("role");
+    if (!"Admin".equals(role)) {
+        response.sendRedirect("login.jsp?errCode=unauthorized");
+        return;
+    }
+%>
 <%@ page import="java.util.List, models.RevenueTrend, models.ClientAnalytics, models.Service, models.User" %>
 <!DOCTYPE html>
 <html>

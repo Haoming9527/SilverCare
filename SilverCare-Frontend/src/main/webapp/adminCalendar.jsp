@@ -1,3 +1,10 @@
+<%
+    String role = (String) session.getAttribute("role");
+    if (!"Admin".equals(role)) {
+        response.sendRedirect("login.jsp?errCode=unauthorized");
+        return;
+    }
+%>
 <%@ page import="java.time.*" %>
 <%@ page import="java.time.format.TextStyle" %>
 <%@ page import="java.util.Locale" %>

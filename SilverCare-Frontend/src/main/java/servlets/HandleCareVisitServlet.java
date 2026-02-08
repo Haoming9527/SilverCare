@@ -17,6 +17,13 @@ public class HandleCareVisitServlet extends HttpServlet {
     private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String role = (String) session.getAttribute("role");
+        if (!"Admin".equals(role)) {
+            response.sendRedirect("login.jsp?errCode=unauthorized");
+            return;
+        }
+
         String bookingIdStr = request.getParameter("bookingId");
         String action = request.getParameter("action"); // "checkin" or "checkout"
 
