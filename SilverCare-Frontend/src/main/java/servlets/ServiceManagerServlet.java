@@ -11,11 +11,22 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
 import models.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
 
 @WebServlet("/manageService")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+    maxFileSize = 1024 * 1024 * 10,      // 10MB
+    maxRequestSize = 1024 * 1024 * 50    // 50MB
+)
 public class ServiceManagerServlet extends HttpServlet {
     private static final String API_BASE_URL = "http://localhost:8081/api/services";
 
@@ -37,7 +48,12 @@ public class ServiceManagerServlet extends HttpServlet {
                 s.setDescription(request.getParameter("description"));
                 s.setPrice(Double.parseDouble(request.getParameter("price")));
                 s.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
-                s.setImageUrl(request.getParameter("imageUrl"));
+                
+                String imageUrl = handleFileUpload(request);
+                if (imageUrl == null || imageUrl.isEmpty()) {
+                    imageUrl = "images/default.png";
+                }
+                s.setImageUrl(imageUrl);
                 
                 Response apiResp = client.target(API_BASE_URL + "/add")
                         .request(MediaType.APPLICATION_JSON)
@@ -55,7 +71,22 @@ public class ServiceManagerServlet extends HttpServlet {
                 s.setDescription(request.getParameter("description"));
                 s.setPrice(Double.parseDouble(request.getParameter("price")));
                 s.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
-                s.setImageUrl(request.getParameter("imageUrl"));
+                
+                // Handle Image Upload (Optional for update)
+                String imageUrl = handleFileUpload(request);
+                if (imageUrl != null) {
+                    s.setImageUrl(imageUrl);
+                } else {
+                    // Fetch existing image URL if no new file is uploaded
+                    Service existing = client.target(API_BASE_URL + "/" + s.getId())
+                            .request(MediaType.APPLICATION_JSON)
+                            .get(Service.class);
+                    String currentImg = existing.getImageUrl();
+                    if (currentImg == null || currentImg.isEmpty()) {
+                        currentImg = "images/default.png";
+                    }
+                    s.setImageUrl(currentImg);
+                }
                 
                 Response apiResp = client.target(API_BASE_URL + "/update")
                         .request(MediaType.APPLICATION_JSON)
@@ -83,5 +114,40 @@ public class ServiceManagerServlet extends HttpServlet {
         } finally {
             client.close();
         }
+    }
+
+    private String handleFileUpload(HttpServletRequest request) throws ServletException, IOException {
+        Part filePart = request.getPart("imageFile");
+        if (filePart == null || filePart.getSize() <= 0) {
+            return null;
+        }
+
+        String fileName = UUID.randomUUID().toString() + "_" + getFileName(filePart);
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) uploadDir.mkdir();
+
+        File file = new File(uploadDir, fileName);
+        try (InputStream input = filePart.getInputStream();
+             FileOutputStream output = new FileOutputStream(file)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+        }
+
+        return "uploads/" + fileName;
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
     }
 }

@@ -108,6 +108,14 @@
                         <strong>Success!</strong> Caregiver checked in successfully.
                     <% } else if ("checkout_success".equals(successParam)) { %>
                         <strong>Success!</strong> Caregiver checked out successfully.
+                    <% } else if ("update".equals(successParam)) { %>
+                        <strong>Success!</strong> Record updated successfully.
+                    <% } else if ("add".equals(successParam)) { %>
+                        <strong>Success!</strong> Record added successfully.
+                    <% } else if ("delete".equals(successParam)) { %>
+                        <strong>Success!</strong> Record deleted successfully.
+                    <% } else { %>
+                        <strong>Success!</strong> Action completed successfully.
                     <% } %>
                 </div>
             <% } %>

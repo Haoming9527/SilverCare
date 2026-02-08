@@ -28,7 +28,7 @@
     </div>
         <p>Fill in the details below to add a new care service.</p>
 
-        <form action="manageService" method="post">
+        <form action="manageService" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="add">
             
             <div class="input-group">
@@ -56,8 +56,8 @@
             </div>
 
             <div class="input-group">
-                <label for="imageUrl">Image URL (Optional)</label>
-                <input type="text" id="imageUrl" name="imageUrl">
+                <label for="imageFile">Service Image</label>
+                <input type="file" id="imageFile" name="imageFile" accept="image/*">
             </div>
 
             <div class="form-actions">

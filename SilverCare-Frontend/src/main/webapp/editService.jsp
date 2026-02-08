@@ -28,7 +28,7 @@
         <% Service service = (Service) request.getAttribute("service");
            List<ServiceCategory> categories = (List<ServiceCategory>) request.getAttribute("categories"); %>
 
-        <form action="manageService" method="post">
+        <form action="manageService" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="id" value="<%= service.getId() %>">
             
@@ -57,8 +57,14 @@
             </div>
 
             <div class="input-group">
-                <label for="imageUrl">Image URL (Optional)</label>
-                <input type="text" id="imageUrl" name="imageUrl" value="<%= service.getImageUrl() != null ? service.getImageUrl() : "" %>">
+                <label for="imageFile">Service Image</label>
+                <% if (service.getImageUrl() != null && !service.getImageUrl().isEmpty()) { %>
+                    <div style="margin-bottom: 10px;">
+                        <img src="<%= service.getImageUrl() %>" alt="Current Image" style="max-width: 200px; border-radius: 8px; border: 1px solid #ddd;">
+                        <p style="font-size: 0.8rem; color: #666;">Current Image</p>
+                    </div>
+                <% } %>
+                <input type="file" id="imageFile" name="imageFile" accept="image/*">
             </div>
 			<br>
             <div class="form-actions">
