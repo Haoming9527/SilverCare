@@ -59,6 +59,7 @@
                         <input type="password" id="password" name="password" placeholder="Create a password" required>
                     </div>
 
+
                     <button type="submit" class="button button-primary full-width">Register</button>
                 </form>
 

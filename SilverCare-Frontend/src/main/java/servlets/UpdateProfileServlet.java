@@ -46,6 +46,7 @@ public class UpdateProfileServlet extends HttpServlet {
         String address = request.getParameter("address");
         String healthInfo = request.getParameter("healthInfo");
         String preferences = request.getParameter("preferences");
+        String postalCode = request.getParameter("postalCode");
 
         user.setUsername(username);
         user.setEmail(email);
@@ -54,6 +55,7 @@ public class UpdateProfileServlet extends HttpServlet {
         user.setAddress(address);
         user.setHealthInfo(healthInfo);
         user.setPreferences(preferences);
+        user.setPostalCode(postalCode);
 
         Client client = ClientBuilder.newClient();
         try {

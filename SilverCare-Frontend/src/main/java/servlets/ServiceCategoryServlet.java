@@ -22,6 +22,7 @@ public class ServiceCategoryServlet extends HttpServlet {
     private static final String API_BASE_URL = "http://localhost:8081/api";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String searchParam = request.getParameter("search");
         String categoryIdParam = request.getParameter("category_id");
         Client client = ClientBuilder.newClient();
 
@@ -31,9 +32,13 @@ public class ServiceCategoryServlet extends HttpServlet {
                     .request(MediaType.APPLICATION_JSON)
                     .get(new GenericType<List<ServiceCategory>>() {});
 
-            // Fetch Services based on category filter
+            // Fetch Services based on category or search filter
             List<Service> services;
-            if (categoryIdParam != null && !categoryIdParam.trim().isEmpty()) {
+            if (searchParam != null && !searchParam.trim().isEmpty()) {
+                services = client.target(API_BASE_URL + "/services/search/" + java.net.URLEncoder.encode(searchParam, "UTF-8"))
+                        .request(MediaType.APPLICATION_JSON)
+                        .get(new GenericType<List<Service>>() {});
+            } else if (categoryIdParam != null && !categoryIdParam.trim().isEmpty()) {
                 services = client.target(API_BASE_URL + "/services/category/" + categoryIdParam)
                         .request(MediaType.APPLICATION_JSON)
                         .get(new GenericType<List<Service>>() {});
@@ -46,6 +51,7 @@ public class ServiceCategoryServlet extends HttpServlet {
             request.setAttribute("categories", categories);
             request.setAttribute("services", services);
             request.setAttribute("selectedCategoryId", categoryIdParam);
+            request.setAttribute("searchQuery", searchParam);
 
             request.getRequestDispatcher("serviceCategory.jsp").forward(request, response);
 

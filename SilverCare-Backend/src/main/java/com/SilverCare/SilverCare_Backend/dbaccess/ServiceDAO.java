@@ -162,4 +162,59 @@ public class ServiceDAO {
             try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
+
+    public List<Service> searchServices(String query) {
+        List<Service> services = new ArrayList<>();
+        Connection conn = null;
+        String sql = "SELECT * FROM silvercare.service WHERE LOWER(service_name) LIKE ? OR LOWER(description) LIKE ?";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            String pattern = "%" + query.toLowerCase() + "%";
+            pstmt.setString(1, pattern);
+            pstmt.setString(2, pattern);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Service svc = new Service();
+                svc.setId(rs.getInt("id"));
+                svc.setServiceName(rs.getString("service_name"));
+                svc.setDescription(rs.getString("description"));
+                svc.setPrice(rs.getDouble("price"));
+                svc.setCategoryId(rs.getInt("category_id"));
+                svc.setImageUrl(rs.getString("image_url"));
+                services.add(svc);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return services;
+    }
+
+    public List<java.util.Map<String, Object>> getServiceDemand() {
+        List<java.util.Map<String, Object>> demandList = new ArrayList<>();
+        Connection conn = null;
+        String sql = "SELECT s.service_name, COUNT(bd.booking_id) as booking_count " +
+                     "FROM silvercare.service s " +
+                     "LEFT JOIN silvercare.booking_details bd ON s.id = bd.service_id " +
+                     "GROUP BY s.id, s.service_name " +
+                     "ORDER BY booking_count DESC";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("serviceName", rs.getString("service_name"));
+                map.put("bookingCount", rs.getInt("booking_count"));
+                demandList.add(map);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return demandList;
+    }
 }

@@ -6,7 +6,7 @@
         return;
     }
 %>
-<%@ page import="java.util.List, models.RevenueTrend, models.ClientAnalytics, models.Service, models.User" %>
+<%@ page import="java.util.List, java.util.Map, models.RevenueTrend, models.ClientAnalytics, models.Service, models.User" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -97,6 +97,18 @@
             .analytics-grid { grid-template-columns: 1fr; }
             .full-width-card { grid-column: 1; }
         }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            display: inline-block;
+        }
+        .badge-high { background-color: #e67e22; }
+        .badge-medium { background-color: #3498db; }
+        .badge-low { background-color: #95a5a6; }
     </style>
 </head>
 <body>
@@ -235,6 +247,181 @@
                                 }
                             }
                         %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <%-- Service Ratings --%>
+        <div class="analytics-card">
+            <h3>Service Ratings</h3>
+            <div class="table-responsive">
+                <table class="data-table-compact">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Rating</th>
+                            <th>Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                            List<Map<String, Object>> serviceRatings = (List<Map<String, Object>>) request.getAttribute("serviceRatings");
+                            if (serviceRatings != null && !serviceRatings.isEmpty()) {
+                                for (Map<String, Object> entry : serviceRatings) {
+                        %>
+                            <tr>
+                                <td><strong><%= entry.get("serviceName") %></strong></td>
+                                <td>
+                                    <span style="color: #f1c40f;">★</span> 
+                                    <%= String.format("%.1f", ((Number)entry.get("avgRating")).doubleValue()) %>
+                                </td>
+                                <td><%= entry.get("feedbackCount") %></td>
+                            </tr>
+                        <% 
+                                }
+                            } else {
+                        %>
+                            <tr><td colspan="3" style="text-align: center;">No feedback data yet.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <%-- Caregiver Ratings --%>
+        <div class="analytics-card">
+            <h3>Caregiver Performance</h3>
+            <div class="table-responsive">
+                <table class="data-table-compact">
+                    <thead>
+                        <tr>
+                            <th>Caregiver</th>
+                            <th>Rating</th>
+                            <th>Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                            List<Map<String, Object>> caregiverRatings = (List<Map<String, Object>>) request.getAttribute("caregiverRatings");
+                            if (caregiverRatings != null && !caregiverRatings.isEmpty()) {
+                                for (Map<String, Object> entry : caregiverRatings) {
+                        %>
+                            <tr>
+                                <td><strong><%= entry.get("caregiverName") %></strong></td>
+                                <td>
+                                    <span style="color: #f1c40f;">★</span> 
+                                    <%= String.format("%.1f", ((Number)entry.get("avgRating")).doubleValue()) %>
+                                </td>
+                                <td><%= entry.get("feedbackCount") %></td>
+                            </tr>
+                        <% 
+                                }
+                            } else {
+                        %>
+                            <tr><td colspan="3" style="text-align: center;">No caregiver reviews yet.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <%-- High Demand Services --%>
+        <div class="analytics-card full-width-card">
+            <h3>Service Demand</h3>
+            <div class="table-responsive">
+                <table class="data-table-compact">
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Total Bookings</th>
+                            <th>Demand Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                            List<Map<String, Object>> serviceDemand = (List<Map<String, Object>>) request.getAttribute("serviceDemand");
+                            if (serviceDemand != null && !serviceDemand.isEmpty()) {
+                                int maxBookings = 0;
+                                for(Map<String, Object> d : serviceDemand) {
+                                    int countValue = ((Number)d.get("bookingCount")).intValue();
+                                    if(countValue > maxBookings) maxBookings = countValue;
+                                }
+
+                                for (Map<String, Object> entry : serviceDemand) {
+                                    int countValue = ((Number)entry.get("bookingCount")).intValue();
+                                    String demandLabel = "Low";
+                                    String badgeClass = "badge-low";
+                                    
+                                    if (countValue >= maxBookings * 0.7 && countValue > 0) {
+                                        demandLabel = "High";
+                                        badgeClass = "badge-high";
+                                    } else if (countValue >= maxBookings * 0.3) {
+                                        demandLabel = "Medium";
+                                        badgeClass = "badge-medium";
+                                    }
+                        %>
+                            <tr>
+                                <td><strong><%= entry.get("serviceName") %></strong></td>
+                                <td><%= countValue %></td>
+                                <td>
+                                    <span class="badge <%= badgeClass %>">
+                                        <%= demandLabel %>
+                                    </span>
+                                </td>
+                            </tr>
+                        <% 
+                                }
+                            } else {
+                        %>
+                            <tr><td colspan="3" style="text-align: center;">No booking data yet.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <%-- Clients by Residential Area --%>
+        <div class="analytics-card full-width-card">
+            <h3>Clients by Residential Area</h3>
+            <p style="font-size: 0.9rem; color: #888; margin-bottom: 10px;">Grouping based on the first 2 digits of the 6-digit postal code (Singapore Sectors).</p>
+            <div class="table-responsive">
+                <table class="data-table-compact">
+                    <thead>
+                        <tr>
+                            <th>Postal Code</th>
+                            <th>Number of Clients</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                            List<Map<String, Object>> areaDist = (List<Map<String, Object>>) request.getAttribute("areaDistribution");
+                            if (areaDist != null && !areaDist.isEmpty()) {
+                                for (Map<String, Object> entry : areaDist) {
+                                    String areaCode = (String) entry.get("areaCode");
+                                    String description = "Residential Area " + areaCode;
+                                    
+                                    // Basic mapping for common SG sectors
+                                    if ("01".equals(areaCode) || "02".equals(areaCode) || "03".equals(areaCode)) description = "Raffles Place, Cecil, Marina";
+                                    else if ("04".equals(areaCode) || "05".equals(areaCode)) description = "Harbourfront, Telok Blangah";
+                                    else if ("12".equals(areaCode) || "13".equals(areaCode)) description = "Balestier, Toa Payoh, Serangoon";
+                                    else if ("14".equals(areaCode) || "15".equals(areaCode) || "16".equals(areaCode)) description = "Geylang, Eunos, Katong, Marine Parade";
+                                    else if ("18".equals(areaCode) || "19".equals(areaCode)) description = "Tampines, Pasir Ris, Serangoon Garden, Hougang, Punggol";
+                                    else if ("22".equals(areaCode) || "23".equals(areaCode)) description = "Jurong, Bukit Batok, Bukit Panjang, Choa Chu Kang";
+                                    else if ("25".equals(areaCode) || "26".equals(areaCode) || "27".equals(areaCode)) description = "Kranji, Woodgrove, Yishun, Sembawang";
+                        %>
+                            <tr>
+                                <td><strong>Sector <%= areaCode %></strong></td>
+                                <td><%= entry.get("clientCount") %></td>
+                                <td style="color: #666;"><%= description %></td>
+                            </tr>
+                        <% 
+                                }
+                            } else {
+                        %>
+                            <tr><td colspan="3" style="text-align: center;">No residential distribution data available yet.</td></tr>
+                        <% } %>
                     </tbody>
                 </table>
             </div>

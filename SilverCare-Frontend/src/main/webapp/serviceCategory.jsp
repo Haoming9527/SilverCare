@@ -23,7 +23,15 @@
             List<ServiceCategory> categories = (List<ServiceCategory>) request.getAttribute("categories");
             List<Service> services = (List<Service> ) request.getAttribute("services");
             String selectedCategoryId = (String) request.getAttribute("selectedCategoryId");
+            String searchQuery = (String) request.getAttribute("searchQuery");
         %>
+
+        <div class="search-section" style="max-width: 600px; margin: 0 auto 20px;">
+            <form action="serviceCategories" method="get" style="display: flex; gap: 10px;">
+                <input type="text" name="search" placeholder="Search services..." value="<%= searchQuery != null ? searchQuery : "" %>" style="flex: 1; padding: 10px 15px; border: 1px solid #ddd; border-radius: 25px; outline: none;">
+                <button type="submit" class="button button-primary" style="border-radius: 25px; padding: 10px 25px;">Search</button>
+            </form>
+        </div>
 
         <div class="category-bar diagnostic-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px auto; justify-content: center;">
             <a href="serviceCategories" class="category-btn <%= (selectedCategoryId == null || selectedCategoryId.isEmpty()) ? "active" : "" %>" style="text-decoration: none; color: #333; background-color: #f0f0f0; padding: 8px 16px; border-radius: 20px; font-weight: 500; transition: all 0.3s ease;">All</a>

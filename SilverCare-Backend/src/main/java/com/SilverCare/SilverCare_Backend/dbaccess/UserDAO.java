@@ -38,12 +38,13 @@ public class UserDAO {
         int rowsAffected = 0;
         try {
             conn = DBConnection.getConnection();
-            String sql = "INSERT INTO silvercare.users (username, email, password, role) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO silvercare.users (username, email, password, role, postal_code) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setInt(4, user.getRole());
+            ps.setString(5, user.getPostalCode());
 
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
@@ -82,6 +83,7 @@ public class UserDAO {
                 uBean.setAddress(rs.getString("address"));
                 uBean.setHealthInfo(rs.getString("health_info"));
                 uBean.setPreferences(rs.getString("preferences"));
+                uBean.setPostalCode(rs.getString("postal_code"));
 
             }
         } catch (SQLException e) {
@@ -110,6 +112,9 @@ public class UserDAO {
                 u.setUsername(rs.getString("username"));
                 u.setEmail(rs.getString("email"));
                 u.setRole(rs.getInt("role"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddress(rs.getString("address"));
+                u.setPostalCode(rs.getString("postal_code"));
                 userList.add(u);
             }
         } catch (SQLException e) {
@@ -125,16 +130,18 @@ public class UserDAO {
         int rowsAffected = 0;
         try {
             conn = DBConnection.getConnection();
-            String sql = "UPDATE silvercare.users SET username = ?, email = ?, password = ?, phone = ?, address = ?, health_info = ?, preferences = ? WHERE id = ?";
+            String sql = "UPDATE silvercare.users SET username = ?, email = ?, password = ?, role = ?, phone = ?, address = ?, health_info = ?, preferences = ?, postal_code = ? WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
-            ps.setString(4, user.getPhone());
-            ps.setString(5, user.getAddress());
-            ps.setString(6, user.getHealthInfo());
-            ps.setString(7, user.getPreferences());
-            ps.setInt(8, user.getId());
+            ps.setInt(4, user.getRole());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getAddress());
+            ps.setString(7, user.getHealthInfo());
+            ps.setString(8, user.getPreferences());
+            ps.setString(9, user.getPostalCode());
+            ps.setInt(10, user.getId());
 
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
@@ -147,5 +154,78 @@ public class UserDAO {
             }
         }
         return rowsAffected;
+    }
+
+    public int deleteUser(int id) {
+        Connection conn = null;
+        int rowsAffected = 0;
+        try {
+            conn = DBConnection.getConnection();
+            String sql = "DELETE FROM silvercare.users WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rowsAffected = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return rowsAffected;
+    }
+
+    public User getUserById(int id) {
+        User uBean = null;
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM silvercare.users WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                uBean = new User();
+                uBean.setId(rs.getInt("id"));
+                uBean.setUsername(rs.getString("username"));
+                uBean.setEmail(rs.getString("email"));
+                uBean.setPassword(rs.getString("password"));
+                uBean.setRole(rs.getInt("role"));
+                uBean.setPhone(rs.getString("phone"));
+                uBean.setAddress(rs.getString("address"));
+                uBean.setHealthInfo(rs.getString("health_info"));
+                uBean.setPreferences(rs.getString("preferences"));
+                uBean.setPostalCode(rs.getString("postal_code"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return uBean;
+    }
+
+    public List<java.util.Map<String, Object>> getClientsByArea() {
+        List<java.util.Map<String, Object>> areaData = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            // Assuming first 2 digits of postal code represent an area/sector
+            String sql = "SELECT SUBSTRING(postal_code, 1, 2) AS area_code, COUNT(*) AS client_count " +
+                         "FROM silvercare.users WHERE postal_code IS NOT NULL AND postal_code != '' " +
+                         "GROUP BY SUBSTRING(postal_code, 1, 2) " +
+                         "ORDER BY client_count DESC";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("areaCode", rs.getString("area_code"));
+                map.put("clientCount", rs.getInt("client_count"));
+                areaData.add(map);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return areaData;
     }
 }

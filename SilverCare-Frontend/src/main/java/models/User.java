@@ -11,6 +11,7 @@ public class User {
     private String address;
     private String healthInfo;
     private String preferences;
+    private String postalCode;
 
     // No-argument constructor 
     public User() {
@@ -25,12 +26,13 @@ public class User {
     }
 
     // Constructor with id
-    public User(int id, String username, String email, String password, int role) {
+    public User(int id, String username, String email, String password, int role, String postalCode) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.postalCode = postalCode;
     }
 
     // Getters and Setters
@@ -104,5 +106,13 @@ public class User {
 
     public void setPreferences(String preferences) {
         this.preferences = preferences;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 }

@@ -62,4 +62,14 @@ public class ServiceController {
         }
         return org.springframework.http.ResponseEntity.status(500).body("Failed to delete service");
     }
+
+    @GetMapping("/search/{query}")
+    public List<Service> searchServices(@PathVariable String query) {
+        return serviceDAO.searchServices(query);
+    }
+
+    @GetMapping("/demand")
+    public List<java.util.Map<String, Object>> getServiceDemand() {
+        return serviceDAO.getServiceDemand();
+    }
 }

@@ -51,4 +51,14 @@ public class FeedbackController {
         }
         return ResponseEntity.status(500).body("Failed to delete feedback");
     }
+
+    @GetMapping("/analytics/service-ratings")
+    public java.util.List<java.util.Map<String, Object>> getServiceRatings() {
+        return feedbackDAO.getServiceRatings();
+    }
+
+    @GetMapping("/analytics/caregiver-ratings")
+    public java.util.List<java.util.Map<String, Object>> getCaregiverRatings() {
+        return feedbackDAO.getCaregiverRatings();
+    }
 }

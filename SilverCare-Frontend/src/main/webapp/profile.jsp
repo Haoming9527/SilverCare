@@ -81,6 +81,11 @@
                 </div>
             </div>
 
+            <div class="form-group" style="grid-column: span 1;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Postal Code</label>
+                <input type="text" name="postalCode" value="<%= user.getPostalCode() != null ? user.getPostalCode() : "" %>" placeholder="6-digit Postal Code" pattern="\d{6}" title="Please enter a 6-digit postal code" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 1rem;">
+            </div>
+
             <div class="form-group" style="grid-column: span 2;">
                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Home Address</label>
                 <textarea name="address" rows="3" placeholder="Enter your full residential address" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 1rem; resize: none;"><%= user.getAddress() != null ? user.getAddress() : "" %></textarea>

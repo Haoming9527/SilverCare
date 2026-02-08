@@ -208,6 +208,9 @@
     <!-- Users Tab -->
     <% if ("users".equals(activeTab)) { %>
     <div id="users-tab" class="tab-content active">
+        <div style="margin-bottom: 20px;">
+            <a href="addUser.jsp" class="button button-primary">Add Client</a>
+        </div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -215,6 +218,7 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -224,6 +228,14 @@
                         <td><%= u.getUsername() %></td>
                         <td><%= u.getEmail() %></td>
                         <td><%= u.getRole() == 1 ? "Admin" : "Customer" %></td>
+                        <td>
+                            <a href="editUser?id=<%= u.getId() %>" class="chip-button chip-button-primary">Edit</a>
+                            <form action="manageUser" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<%= u.getId() %>">
+                                <button type="submit" class="chip-button chip-button-danger" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 <% } } %>
             </tbody>

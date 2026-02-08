@@ -128,4 +128,60 @@ public class FeedbackDAO {
             try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
+
+    public java.util.List<java.util.Map<String, Object>> getServiceRatings() {
+        java.util.List<java.util.Map<String, Object>> ratings = new java.util.ArrayList<>();
+        Connection conn = null;
+        String sql = "SELECT s.service_name, AVG(f.rating) as avg_rating, COUNT(f.id) as feedback_count " +
+                     "FROM silvercare.service s " +
+                     "JOIN silvercare.booking_details bd ON s.id = bd.service_id " +
+                     "JOIN silvercare.feedback f ON bd.booking_id = f.booking_id " +
+                     "GROUP BY s.id, s.service_name " +
+                     "ORDER BY avg_rating DESC";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            java.sql.ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("serviceName", rs.getString("service_name"));
+                map.put("avgRating", rs.getDouble("avg_rating"));
+                map.put("feedbackCount", rs.getInt("feedback_count"));
+                ratings.add(map);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return ratings;
+    }
+
+    public java.util.List<java.util.Map<String, Object>> getCaregiverRatings() {
+        java.util.List<java.util.Map<String, Object>> ratings = new java.util.ArrayList<>();
+        Connection conn = null;
+        String sql = "SELECT b.specific_caregiver, AVG(f.rating) as avg_rating, COUNT(f.id) as feedback_count " +
+                     "FROM silvercare.booking b " +
+                     "JOIN silvercare.feedback f ON b.id = f.booking_id " +
+                     "WHERE b.specific_caregiver IS NOT NULL AND b.specific_caregiver != '' " +
+                     "GROUP BY b.specific_caregiver " +
+                     "ORDER BY avg_rating DESC";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            java.sql.ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("caregiverName", rs.getString("specific_caregiver"));
+                map.put("avgRating", rs.getDouble("avg_rating"));
+                map.put("feedbackCount", rs.getInt("feedback_count"));
+                ratings.add(map);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return ratings;
+    }
 }

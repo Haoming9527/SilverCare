@@ -14,6 +14,7 @@ import models.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/adminAnalytics")
 public class AdminAnalyticsServlet extends HttpServlet {
@@ -51,10 +52,30 @@ public class AdminAnalyticsServlet extends HttpServlet {
                 request.setAttribute("filteredUsers", filteredUsers);
             }
 
+            List<Map<String, Object>> serviceRatings = client.target(API_BASE_URL + "/feedback/analytics/service-ratings")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(new GenericType<List<Map<String, Object>>>() {});
+
+            List<Map<String, Object>> caregiverRatings = client.target(API_BASE_URL + "/feedback/analytics/caregiver-ratings")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(new GenericType<List<Map<String, Object>>>() {});
+
+            List<Map<String, Object>> serviceDemand = client.target(API_BASE_URL + "/services/demand")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(new GenericType<List<Map<String, Object>>>() {});
+
+            List<Map<String, Object>> areaDistribution = client.target(API_BASE_URL + "/users/analytics/area-distribution")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(new GenericType<List<Map<String, Object>>>() {});
+
             request.setAttribute("revenueTrend", revenueTrend);
             request.setAttribute("topClients", topClients);
             request.setAttribute("servicesList", services);
             request.setAttribute("selectedServiceId", serviceIdStr);
+            request.setAttribute("serviceRatings", serviceRatings);
+            request.setAttribute("caregiverRatings", caregiverRatings);
+            request.setAttribute("serviceDemand", serviceDemand);
+            request.setAttribute("areaDistribution", areaDistribution);
 
             request.getRequestDispatcher("adminAnalytics.jsp").forward(request, response);
         } catch (Exception e) {

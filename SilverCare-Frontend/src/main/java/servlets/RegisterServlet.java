@@ -31,7 +31,6 @@ public class RegisterServlet extends HttpServlet {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
         if (username == null || email == null || password == null ||
             username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
             response.sendRedirect("register.jsp?errCode=error");
