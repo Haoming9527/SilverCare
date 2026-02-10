@@ -4,9 +4,11 @@ FROM tomcat:10.1-jdk21-temurin
 # Remove default Tomcat apps to clean up
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy the webapp content into the ROOT context or a specific context path
-# Here we use the project name as the context path to match existing URLs
-COPY src/main/webapp /usr/local/tomcat/webapps/SilverCare-Frontend
+# Disable the shutdown port to prevent Render's health check from hitting it
+RUN sed -i 's/port="8005" shutdown="SHUTDOWN"/port="-1" shutdown="SHUTDOWN"/' /usr/local/tomcat/conf/server.xml
+
+# Copy the webapp content into the ROOT context
+COPY src/main/webapp /usr/local/tomcat/webapps/ROOT
 
 EXPOSE 8080
 
