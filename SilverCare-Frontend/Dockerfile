@@ -1,5 +1,5 @@
 # Use Tomcat 10 which supports Jakarta EE 10 (Servlets 6.0, JSP 3.1)
-FROM tomcat:10.1-jdk21-slim
+FROM tomcat:10.1-jdk21-temurin
 
 # Remove default Tomcat apps to clean up
 RUN rm -rf /usr/local/tomcat/webapps/*
