@@ -6,7 +6,6 @@ WORKDIR /app
 RUN mvn clean package -DskipTests
 
 # Run stage
-# Using Eclipse Temurin JRE 21 (as Java 25 images are not yet standard on all platforms)
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.war /app/app.war
