@@ -28,6 +28,7 @@
                     } else if (isAdmin) {
                 %>
                 <li><a href="adminDashboard">Admin Dashboard</a></li>
+                <li><a href="logs">Activity Logs</a></li>
                 <li><a href="logout" class="button button-secondary">Logout</a></li>
                 <%
                     } else if (isCustomer) {

@@ -36,6 +36,14 @@ public class ServiceCategoryController {
         return org.springframework.http.ResponseEntity.status(500).body("Failed to add category");
     }
 
+    @org.springframework.web.bind.annotation.PutMapping("/update")
+    public org.springframework.http.ResponseEntity<String> updateCategory(@org.springframework.web.bind.annotation.RequestBody ServiceCategory category) {
+        if (categoryDAO.updateCategory(category)) {
+            return org.springframework.http.ResponseEntity.ok("Category updated successfully");
+        }
+        return org.springframework.http.ResponseEntity.status(500).body("Failed to update category");
+    }
+
     @DeleteMapping("/delete/{id}")
     public org.springframework.http.ResponseEntity<String> deleteCategory(@PathVariable int id) {
         if (categoryDAO.deleteCategory(id)) {

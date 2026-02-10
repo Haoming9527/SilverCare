@@ -126,11 +126,6 @@
                 </div>
             <% } %>
         </div>
-        <div>
-            <a href="addService" class="button button-primary">+ Add Service</a>
-            <a href="manageCategory" class="button button-secondary">Manage Categories</a>
-            <a href="logs" class="button button-secondary">Activity Logs</a>
-        </div>
     </div>
 
     <%
@@ -150,6 +145,9 @@
     <!-- Services Tab -->
     <% if ("services".equals(activeTab)) { %>
     <div id="services-tab" class="tab-content active">
+        <div style="margin-bottom: 20px;">
+            <a href="addService" class="button button-primary">+ Add Service</a>
+        </div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -183,11 +181,15 @@
     <!-- Categories Tab -->
     <% if ("categories".equals(activeTab)) { %>
     <div id="categories-tab" class="tab-content active">
+        <div style="margin-bottom: 20px;">
+            <a href="manageCategory" class="button button-secondary">Manage Categories</a>
+        </div>
         <table class="data-table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Category Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -198,6 +200,14 @@
                     <tr>
                         <td><%= cat.getId() %></td>
                         <td><%= cat.getCategoryName() %></td>
+                        <td>
+                            <a href="editCategoryManager?id=<%= cat.getId() %>" class="chip-button chip-button-primary">Edit</a>
+                            <form action="manageCategory" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<%= cat.getId() %>">
+                                <button type="submit" class="chip-button chip-button-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 <% } } %>
             </tbody>
@@ -217,6 +227,10 @@
                     <th>ID</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th>Medical History</th>
+                    <th>Care Preferences</th>
                     <th>Role</th>
                     <th>Actions</th>
                 </tr>
@@ -227,9 +241,13 @@
                         <td><%= u.getId() %></td>
                         <td><%= u.getUsername() %></td>
                         <td><%= u.getEmail() %></td>
+                        <td><%= u.getPhone() != null ? u.getPhone() : "-" %></td>
+                        <td><%= u.getAddress() != null ? u.getAddress() : "-" %></td>
+                        <td><%= u.getHealthInfo() != null ? u.getHealthInfo() : "-" %></td>
+                        <td><%= u.getPreferences() != null ? u.getPreferences() : "-" %></td>
                         <td><%= u.getRole() == 1 ? "Admin" : "Customer" %></td>
                         <td>
-                            <a href="editUser?id=<%= u.getId() %>" class="chip-button chip-button-primary">Edit</a>
+                            <a href="editUser?id=<%= u.getId() %>" class="chip-button chip-button-primary" style="margin-right: 5px;">Edit</a>
                             <form action="manageUser" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<%= u.getId() %>">

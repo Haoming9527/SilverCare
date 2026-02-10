@@ -114,6 +114,8 @@ public class UserDAO {
                 u.setRole(rs.getInt("role"));
                 u.setPhone(rs.getString("phone"));
                 u.setAddress(rs.getString("address"));
+                u.setHealthInfo(rs.getString("health_info"));
+                u.setPreferences(rs.getString("preferences"));
                 u.setPostalCode(rs.getString("postal_code"));
                 userList.add(u);
             }
