@@ -10,6 +10,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import models.ContactMessage;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.net.URLEncoder;
 @WebServlet("/contact")
 public class ContactServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String API_BASE_URL = "http://localhost:8081/api/contact/save";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/contact/save";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("contact.jsp").forward(request, response);

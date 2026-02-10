@@ -14,6 +14,7 @@ import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import models.User;
 
 @WebServlet("/register")
@@ -40,7 +41,7 @@ public class RegisterServlet extends HttpServlet {
         User user = new User(username, email, password, 2); // Default role 2
 
         Client client = ClientBuilder.newClient();
-        String restUrl = "http://localhost:8081/api/users/register";
+        String restUrl = ApiConfig.getBaseUrl() + "/users/register";
         
         WebTarget target = client.target(restUrl);
         Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);

@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import utils.ApiConfig;
 
 
 import models.Booking;
@@ -26,7 +27,7 @@ import java.net.URLEncoder;
 @WebServlet("/saveBooking")
 public class SaveBookingServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String API_BASE_URL = "http://localhost:8081/api/bookings/create";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/bookings/create";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);

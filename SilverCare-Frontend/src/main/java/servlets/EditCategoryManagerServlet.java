@@ -11,13 +11,14 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import models.ServiceCategory;
 
 import java.io.IOException;
 
 @WebServlet("/editCategoryManager")
 public class EditCategoryManagerServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/serviceCategories";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/serviceCategories";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

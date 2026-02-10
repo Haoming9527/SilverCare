@@ -10,6 +10,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
+import utils.ApiConfig;
 import models.ActivityLog;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import jakarta.ws.rs.core.Response;
 
 @WebServlet("/logs")
 public class LogsServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/logs";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/logs";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

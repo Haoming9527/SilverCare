@@ -9,11 +9,13 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
+import models.Booking;
 import java.io.IOException;
 
 @WebServlet("/manageBookingAdmin")
 public class ManageBookingAdminServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/bookings";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

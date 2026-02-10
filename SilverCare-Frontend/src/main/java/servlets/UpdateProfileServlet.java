@@ -12,11 +12,12 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import java.io.IOException;
 
 @WebServlet("/updateProfile")
 public class UpdateProfileServlet extends HttpServlet {
-    private static final String API_URL = "http://localhost:8081/api/users/";
+    private static final String API_URL = ApiConfig.getBaseUrl() + "/users/";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

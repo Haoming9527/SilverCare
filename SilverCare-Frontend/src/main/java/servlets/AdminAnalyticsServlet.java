@@ -11,6 +11,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import models.*;
+import utils.ApiConfig;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @WebServlet("/adminAnalytics")
 public class AdminAnalyticsServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

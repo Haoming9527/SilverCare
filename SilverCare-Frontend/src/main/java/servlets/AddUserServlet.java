@@ -13,10 +13,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import models.User;
+import utils.ApiConfig;
 
 @WebServlet("/addUser")
 public class AddUserServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

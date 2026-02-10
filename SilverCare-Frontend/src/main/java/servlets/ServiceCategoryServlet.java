@@ -9,8 +9,10 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import models.Service;
 import models.ServiceCategory;
+import utils.ApiConfig;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 public class ServiceCategoryServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-    private static final String API_BASE_URL = "http://localhost:8081/api";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String searchParam = request.getParameter("search");

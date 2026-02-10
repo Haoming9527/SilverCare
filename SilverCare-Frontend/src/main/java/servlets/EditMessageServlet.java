@@ -11,12 +11,13 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import models.ContactMessage;
 import java.io.IOException;
 
 @WebServlet("/editMessage")
 public class EditMessageServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/contact";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/contact";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

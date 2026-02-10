@@ -12,13 +12,15 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import models.User;
+import models.Booking;
+import utils.ApiConfig;
 
 import java.io.IOException;
 
 @WebServlet("/completeBooking")
 public class CompleteBookingServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/bookings";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

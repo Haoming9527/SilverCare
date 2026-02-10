@@ -15,6 +15,7 @@ import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import models.Role;
 import models.User;
 
@@ -45,7 +46,7 @@ public class LoginServlet extends HttpServlet {
         loginRequest.setPassword(password);
 
         Client client = ClientBuilder.newClient();
-        String apiBaseUrl = "http://localhost:8081/api";
+        String apiBaseUrl = ApiConfig.getBaseUrl();
         
         try {
             // Authenticate user

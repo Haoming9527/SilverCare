@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
+import models.Feedback;
 
 import java.io.IOException;
 
 @WebServlet("/manageFeedback")
 public class FeedbackManagerServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/feedback";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/feedback";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

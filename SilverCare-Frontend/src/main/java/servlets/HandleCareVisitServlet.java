@@ -11,11 +11,13 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
+import models.Booking;
 import java.io.IOException;
 
 @WebServlet("/handleCareVisit")
 public class HandleCareVisitServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/bookings";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/bookings";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

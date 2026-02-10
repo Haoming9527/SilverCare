@@ -11,6 +11,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utils.ApiConfig;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.Part;
 import models.Service;
@@ -28,7 +29,7 @@ import java.util.UUID;
     maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
 public class ServiceManagerServlet extends HttpServlet {
-    private static final String API_BASE_URL = "http://localhost:8081/api/services";
+    private static final String API_BASE_URL = ApiConfig.getBaseUrl() + "/services";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
