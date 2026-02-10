@@ -10,6 +10,5 @@ RUN sed -i 's/port="8005" shutdown="SHUTDOWN"/port="-1" shutdown="SHUTDOWN"/' /u
 # Copy the webapp content into the ROOT context
 COPY src/main/webapp /usr/local/tomcat/webapps/ROOT
 
-EXPOSE 8080
-
-CMD ["catalina.sh", "run"]
+# Copy the compiled servlet classes into the WEB-INF/classes folder
+COPY build/classes /usr/local/tomcat/webapps/ROOT/WEB-INF/classes
