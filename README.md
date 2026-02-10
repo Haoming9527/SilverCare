@@ -1,5 +1,6 @@
 # SilverCare
-This repo is for my JAD assignment 2.
+This repo is for our JAD Assignment 2, made by Owen Yap and Shen Haoming.
+Github Link: [https://github.com/Haoming9527/SilverCare/](url)
 
 ## Stripe Payment Integration
 The application uses Stripe for secure payment processing. Bookings are only created in the database after a successful payment is confirmed via Stripe Webhooks.
