@@ -43,6 +43,24 @@ public class FeedbackController {
         return feedbackDAO.getAllFeedback();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Feedback> getFeedbackById(@PathVariable int id) {
+        Feedback f = feedbackDAO.getFeedbackById(id);
+        if (f != null) {
+            return ResponseEntity.ok(f);
+        }
+        return ResponseEntity.status(404).body(null);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateFeedback(@RequestBody Feedback feedback) {
+        if (feedbackDAO.saveFeedback(feedback)) {
+            ActivityLogDAO.log(0, "UPDATE_FEEDBACK", "Admin updated feedback ID: " + feedback.getId());
+            return ResponseEntity.ok("Feedback updated successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to update feedback");
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteFeedback(@PathVariable int id) {
         if (feedbackDAO.deleteFeedback(id)) {

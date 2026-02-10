@@ -77,4 +77,52 @@ public class ContactDAO {
             try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
+
+    public ContactMessage getMessageById(int id) {
+        Connection conn = null;
+        String sql = "SELECT * FROM silvercare.contact_messages WHERE id = ?";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ContactMessage msg = new ContactMessage();
+                msg.setId(rs.getInt("id"));
+                msg.setName(rs.getString("name"));
+                msg.setEmail(rs.getString("email"));
+                msg.setPhone(rs.getString("phone"));
+                msg.setSubject(rs.getString("subject"));
+                msg.setMessage(rs.getString("message"));
+                msg.setCreatedAt(rs.getTimestamp("created_at"));
+                return msg;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return null;
+    }
+
+    public boolean updateMessage(ContactMessage msg) {
+        Connection conn = null;
+        String sql = "UPDATE silvercare.contact_messages SET name = ?, email = ?, phone = ?, subject = ?, message = ? WHERE id = ?";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, msg.getName());
+            ps.setString(2, msg.getEmail());
+            ps.setString(3, msg.getPhone());
+            ps.setString(4, msg.getSubject());
+            ps.setString(5, msg.getMessage());
+            ps.setInt(6, msg.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 }

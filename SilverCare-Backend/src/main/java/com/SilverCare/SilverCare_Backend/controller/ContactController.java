@@ -32,6 +32,24 @@ public class ContactController {
         return contactDAO.getAllMessages();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ContactMessage> getMessageById(@PathVariable int id) {
+        ContactMessage msg = contactDAO.getMessageById(id);
+        if (msg != null) {
+            return ResponseEntity.ok(msg);
+        }
+        return ResponseEntity.status(404).body(null);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateMessage(@RequestBody ContactMessage message) {
+        if (contactDAO.updateMessage(message)) {
+            ActivityLogDAO.log(0, "UPDATE_CONTACT_MESSAGE", "Admin updated contact message ID: " + message.getId());
+            return ResponseEntity.ok("Message updated successfully");
+        }
+        return ResponseEntity.status(500).body("Failed to update message");
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMessage(@PathVariable int id) {
         if (contactDAO.deleteMessage(id)) {

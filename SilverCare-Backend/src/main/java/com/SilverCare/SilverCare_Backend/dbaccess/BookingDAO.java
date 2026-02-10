@@ -103,7 +103,7 @@ public class BookingDAO {
     }
 
     public boolean updateBooking(Booking booking) {
-        String sql = "UPDATE silvercare.booking SET scheduled_date = ?, specific_caregiver = ?, special_request = ? WHERE id = ?";
+        String sql = "UPDATE silvercare.booking SET scheduled_date = ?, specific_caregiver = ?, special_request = ?, status = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
@@ -112,7 +112,8 @@ public class BookingDAO {
             stmt.setTimestamp(1, java.sql.Timestamp.valueOf(ldt));
             stmt.setString(2, booking.getSpecificCaregiver());
             stmt.setString(3, booking.getSpecialRequest());
-            stmt.setInt(4, booking.getId());
+            stmt.setString(4, booking.getStatus());
+            stmt.setInt(5, booking.getId());
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -203,6 +204,45 @@ public class BookingDAO {
             e.printStackTrace();
         }
         return bookings;
+    }
+
+    public Booking getBookingById(int id) {
+        String sql = "SELECT b.*, s.id as service_id, s.service_name, s.price, u.username " +
+                     "FROM silvercare.booking b " +
+                     "JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
+                     "JOIN silvercare.service s ON bd.service_id = s.id " +
+                     "JOIN silvercare.users u ON b.user_id = u.id " +
+                     "WHERE b.id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Booking b = new Booking();
+                    b.setId(rs.getInt("id"));
+                    b.setUserId(rs.getInt("user_id"));
+                    b.setServiceId(rs.getInt("service_id"));
+                    java.sql.Timestamp ts = rs.getTimestamp("scheduled_date");
+                    b.setScheduledDate(ts != null ? ts.toString() : null);
+                    b.setSpecificCaregiver(rs.getString("specific_caregiver"));
+                    b.setSpecialRequest(rs.getString("special_request"));
+                    b.setStatus(rs.getString("status"));
+                    b.setServiceName(rs.getString("service_name"));
+                    b.setPrice(rs.getDouble("price"));
+                    
+                    java.sql.Timestamp checkIn = rs.getTimestamp("check_in_time");
+                    java.sql.Timestamp checkOut = rs.getTimestamp("check_out_time");
+                    b.setCheckInTime(checkIn != null ? checkIn.toString() : null);
+                    b.setCheckOutTime(checkOut != null ? checkOut.toString() : null);
+                    
+                    return b;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean checkIn(int id) {

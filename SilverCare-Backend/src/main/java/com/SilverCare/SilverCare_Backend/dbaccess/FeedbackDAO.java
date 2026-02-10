@@ -129,6 +129,38 @@ public class FeedbackDAO {
         }
     }
 
+    public Feedback getFeedbackById(int id) {
+        Connection conn = null;
+        String sql = "SELECT f.*, u.username, s.service_name FROM silvercare.feedback f " +
+                     "LEFT JOIN silvercare.users u ON f.user_id = u.id " +
+                     "LEFT JOIN silvercare.booking b ON f.booking_id = b.id " +
+                     "LEFT JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
+                     "LEFT JOIN silvercare.service s ON bd.service_id = s.id " +
+                     "WHERE f.id = ?";
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            java.sql.ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Feedback f = new Feedback();
+                f.setId(rs.getInt("id"));
+                f.setUserId(rs.getInt("user_id"));
+                f.setBookingId(rs.getInt("booking_id"));
+                f.setRating(rs.getInt("rating"));
+                f.setComment(rs.getString("comment"));
+                f.setUsername(rs.getString("username"));
+                f.setServiceName(rs.getString("service_name"));
+                return f;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return null;
+    }
+
     public java.util.List<java.util.Map<String, Object>> getServiceRatings() {
         java.util.List<java.util.Map<String, Object>> ratings = new java.util.ArrayList<>();
         Connection conn = null;

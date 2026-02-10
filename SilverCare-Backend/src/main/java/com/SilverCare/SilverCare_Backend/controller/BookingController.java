@@ -113,6 +113,17 @@ public class BookingController {
     }
 
     @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.GET)
+    public ResponseEntity<?> getBookingById(@PathVariable int id) {
+        Booking booking = bookingDAO.getBookingById(id);
+        if (booking != null) {
+            return ResponseEntity.ok(booking);
+        }
+        return ResponseEntity.status(404).body("Booking not found");
+    }
+
+    @RequestMapping(
             path = "/{id}/checkin",
             method = RequestMethod.PUT)
     public ResponseEntity<String> checkIn(@PathVariable int id) {

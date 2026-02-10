@@ -284,11 +284,14 @@
                         <td><%= f.getRating() %>/5</td>
                         <td><%= f.getComment() %></td>
                         <td>
-                            <form action="manageFeedback" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="<%= f.getId() %>">
-                                <button type="submit" class="chip-button chip-button-danger">Delete</button>
-                            </form>
+                            <div style="display: flex; gap: 5px;">
+                                <a href="editFeedback?id=<%= f.getId() %>" class="chip-button chip-button-primary">Edit</a>
+                                <form action="manageFeedback" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this feedback?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<%= f.getId() %>">
+                                    <button type="submit" class="chip-button chip-button-danger">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 <% } } %>
@@ -318,11 +321,14 @@
                         <td><%= m.getSubject() %></td>
                         <td><%= m.getMessage() %></td>
                         <td>
-                            <form action="manageMessage" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="<%= m.getId() %>">
-                                <button type="submit" class="chip-button chip-button-danger">Delete</button>
-                            </form>
+                            <div style="display: flex; gap: 5px;">
+                                <a href="editMessage?id=<%= m.getId() %>" class="chip-button chip-button-primary">Edit</a>
+                                <form action="manageMessage" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<%= m.getId() %>">
+                                    <button type="submit" class="chip-button chip-button-danger">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 <% } } %>
@@ -367,7 +373,7 @@
                             </div>
                         </td>
                         <td>
-                            <div style="display: flex; gap: 5px;">
+                            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
                                 <% if ("Pending".equalsIgnoreCase(b.getStatus()) && b.getCheckOutTime() == null) { %>
                                     <form action="handleCareVisit" method="post" style="display:inline;">
                                         <input type="hidden" name="bookingId" value="<%= b.getId() %>">
@@ -381,6 +387,14 @@
                                         <button type="submit" class="chip-button" style="background: #27ae60; color: white;">Check Out</button>
                                     </form>
                                 <% } %>
+                                
+                                <a href="editCareVisit?id=<%= b.getId() %>" class="chip-button chip-button-primary" style="background: #f39c12;">Edit</a>
+                                
+                                <form action="manageBookingAdmin" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this care visit record?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<%= b.getId() %>">
+                                    <button type="submit" class="chip-button chip-button-danger">Delete</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
