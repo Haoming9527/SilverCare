@@ -94,6 +94,17 @@ public class BookingController {
             consumes = "application/json",
             method = RequestMethod.PUT)
     public ResponseEntity<String> updateBooking(@RequestBody Booking booking) {
+        // Fetch existing booking to preserve status if not provided
+        Booking existingBooking = bookingDAO.getBookingById(booking.getId());
+        if (existingBooking == null) {
+            return ResponseEntity.status(404).body("Booking not found");
+        }
+        
+        // Preserve status if not provided in the update
+        if (booking.getStatus() == null || booking.getStatus().isEmpty()) {
+            booking.setStatus(existingBooking.getStatus());
+        }
+        
         if (bookingDAO.updateBooking(booking)) {
             ActivityLogDAO.log(booking.getUserId(), "UPDATE_BOOKING", "Updated details for booking ID: " + booking.getId());
             return ResponseEntity.ok("Booking updated successfully");

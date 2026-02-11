@@ -20,6 +20,11 @@ public class BookingDAO {
             if (conn == null) throw new SQLException("Failed to establish database connection.");
             conn.setAutoCommit(false); // Start transaction
 
+            // Ensure status is never null
+            if (booking.getStatus() == null || booking.getStatus().isEmpty()) {
+                booking.setStatus("Pending");
+            }
+
             // Insert into booking
             String sql = "INSERT INTO silvercare.booking (user_id, scheduled_date, specific_caregiver, special_request, status, stripe_session_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
             ps = conn.prepareStatement(sql);
@@ -58,7 +63,7 @@ public class BookingDAO {
     public List<Booking> getBookingsByUserId(int userId) {
         List<Booking> bookings = new ArrayList<>();
         Connection conn = null;
-        String sql = "SELECT b.*, s.service_name, s.price " +
+        String sql = "SELECT b.*, bd.service_id, s.service_name, s.price " +
                      "FROM silvercare.booking b " +
                      "JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
                      "JOIN silvercare.service s ON bd.service_id = s.id " +
@@ -80,6 +85,7 @@ public class BookingDAO {
                 b.setSpecificCaregiver(rs.getString("specific_caregiver"));
                 b.setSpecialRequest(rs.getString("special_request"));
                 b.setStatus(rs.getString("status"));
+                b.setServiceId(rs.getInt("service_id"));
                 b.setServiceName(rs.getString("service_name"));
                 b.setPrice(rs.getDouble("price"));
                 b.setStripeSessionId(rs.getString("stripe_session_id"));
@@ -103,6 +109,11 @@ public class BookingDAO {
     }
 
     public boolean updateBooking(Booking booking) {
+        // Ensure status is never null
+        if (booking.getStatus() == null || booking.getStatus().isEmpty()) {
+            booking.setStatus("Pending");
+        }
+        
         String sql = "UPDATE silvercare.booking SET scheduled_date = ?, specific_caregiver = ?, special_request = ?, status = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -170,7 +181,7 @@ public class BookingDAO {
 
     public List<Booking> getAllBookings() {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, s.service_name, s.price, u.username " +
+        String sql = "SELECT b.*, bd.service_id, s.service_name, s.price, u.username " +
                      "FROM silvercare.booking b " +
                      "JOIN silvercare.booking_details bd ON b.id = bd.booking_id " +
                      "JOIN silvercare.service s ON bd.service_id = s.id " +
@@ -190,8 +201,10 @@ public class BookingDAO {
                 b.setSpecificCaregiver(rs.getString("specific_caregiver"));
                 b.setSpecialRequest(rs.getString("special_request"));
                 b.setStatus(rs.getString("status"));
+                b.setServiceId(rs.getInt("service_id"));
                 b.setServiceName(rs.getString("service_name"));
                 b.setPrice(rs.getDouble("price"));
+                b.setStripeSessionId(rs.getString("stripe_session_id"));
                 
                 java.sql.Timestamp checkIn = rs.getTimestamp("check_in_time");
                 java.sql.Timestamp checkOut = rs.getTimestamp("check_out_time");
