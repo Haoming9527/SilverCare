@@ -71,6 +71,7 @@ public class BookingController {
         }
     }
 
+    
     @RequestMapping(
             path = "/{id}/status",
             consumes = "application/json",
