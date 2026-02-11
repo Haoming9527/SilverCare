@@ -77,7 +77,8 @@
                 <div class="booking-card">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
                         <h3 style="margin: 0; border: none; padding: 0;"><%= b.getServiceName() %></h3>
-                        <span class="status-badge status-<%= b.getStatus().toLowerCase().replace(" ", "-") %>"><%= b.getStatus() %></span>
+                        <% String status = b.getStatus() != null ? b.getStatus() : "Pending"; %>
+                        <span class="status-badge status-<%= status.toLowerCase().replace(" ", "-") %>"><%= status %></span>
                     </div>
                     
                     <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 12px;">
